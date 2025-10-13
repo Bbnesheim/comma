@@ -369,8 +369,9 @@
   }
 
   .ai-boat-inspection-discount-text-{{ ai_gen_id }} {
+    display: block;
     color: {{ block.settings.discount_text_color }};
-    font-size: {{ block.settings.pricing_text_size }}px;
+    font-size: {{ block.settings.discount_text_size }}px;
     margin: 0;
     text-align: center;
     width: 100%;
@@ -667,41 +668,9 @@
                 <h3 class="ai-boat-inspection-discount-title-{{ ai_gen_id }}">{{ block.settings.discount_title }}</h3>
               {% endif %}
               {% if block.settings.discount_text != blank %}
-                {%- capture raw_discount_text -%}{{ block.settings.discount_text }}{%- endcapture -%}
-                {%- assign cleaned_discount_text = raw_discount_text
-                  | replace: '<br />', ' '
-                  | replace: '<br/>', ' '
-                  | replace: '<br>', ' '
-                  | strip -%}
-                {%- assign cleaned_discount_text = cleaned_discount_text
-                  | replace: '  ', ' '
-                  | replace: '  ', ' '
-                  | replace: '  ', ' '
-                  | strip -%}
-                {%- capture newline -%}
-{%- endcapture -%}
-                {%- assign double_newline = newline | append: newline -%}
-                {%- assign paragraph_placeholder = '[ai-paragraph-break]' -%}
-                {%- assign cleaned_discount_text = cleaned_discount_text | replace: double_newline, paragraph_placeholder -%}
-                {%- assign cleaned_discount_text = cleaned_discount_text | replace: newline, ' ' -%}
-                {%- assign cleaned_discount_text = cleaned_discount_text
-                  | replace: '  ', ' '
-                  | replace: '  ', ' '
-                  | strip -%}
-                {%- assign discount_paragraphs = cleaned_discount_text | split: paragraph_placeholder -%}
-                {%- capture formatted_discount_text -%}
-                  {%- for discount_paragraph in discount_paragraphs -%}
-                    {%- assign normalized_paragraph = discount_paragraph | strip -%}
-                    {%- if normalized_paragraph != '' -%}
-                      <p>{{ normalized_paragraph }}</p>
-                    {%- endif -%}
-                  {%- endfor -%}
-                {%- endcapture -%}
-                {%- if formatted_discount_text != '' -%}
-                  <div class="ai-boat-inspection-discount-text-{{ ai_gen_id }}">
-                    {{ formatted_discount_text | strip }}
-                  </div>
-                {%- endif -%}
+                <p class="ai-boat-inspection-discount-text-{{ ai_gen_id }}">
+                  {{ block.settings.discount_text | newline_to_br }}
+                </p>
               {% endif %}
             </div>
           {% endif %}
