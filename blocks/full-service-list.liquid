@@ -293,7 +293,7 @@
 
   .ai-boat-inspection-pricing-section-{{ ai_gen_id }} {
     background-color: {{ block.settings.pricing_bg_color }};
-    padding: clamp(1.5rem, {{ block.settings.pricing_padding | divided_by: 16.0 }}rem, 3rem);
+    padding: {{ block.settings.pricing_padding | divided_by: 16.0 }}rem;
     border-radius: {{ block.settings.pricing_border_radius | divided_by: 16.0 }}rem;
     margin: 0;
     border: 1px solid {{ block.settings.pricing_border_color }};
@@ -342,7 +342,7 @@
     background-color: {{ block.settings.discount_bg_color }};
     border: 2px solid {{ block.settings.discount_border_color }};
     border-radius: {{ block.settings.discount_border_radius | divided_by: 16.0 }}rem;
-    padding: clamp(2rem, {{ block.settings.discount_padding | divided_by: 16.0 }}rem, 3.5rem);
+    padding: {{ block.settings.discount_padding | divided_by: 16.0 }}rem;
     text-align: center;
     width: min(100%, 34rem);
     max-width: 100%;
