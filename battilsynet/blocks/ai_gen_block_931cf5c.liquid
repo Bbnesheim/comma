@@ -1,0 +1,499 @@
+{% doc %}
+  @prompt
+    Fix collapsible content section where rows are compressed to tiny slivers and not displaying properly. Create properly functioning collapsible accordion rows with adequate spacing and visibility.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-{{ ai_gen_id }} {
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    border-bottom: 1px solid {{ block.settings.border_color }};
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.header_padding }}px;
+    background-color: {{ block.settings.header_background_color }};
+    color: {{ block.settings.header_text_color }};
+    border: none;
+    text-align: left;
+    font-size: {{ block.settings.header_font_size }}px;
+    font-weight: {{ block.settings.header_font_weight }};
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    min-height: 60px;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.header_hover_color }};
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}:focus {
+    outline:2px solid {{ block.settings.focus_color }};outline-offset: -2px;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}[aria-expanded="true"] .ai-accordion-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    max-height: 0;
+    padding:0 {{ block.settings.content_padding }}px;
+    background-color: {{ block.settings.content_background_color }};
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }}.active {
+    max-height: 1000px;
+    padding: {{ block.settings.content_padding }}px;}
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} {
+    color: {{ block.settings.content_text_color }};
+    font-size: {{ block.settings.content_font_size }}px;
+    line-height: 1.6;}
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} p {
+    margin: 0 0 16px 0;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} h1,
+  .ai-accordion-content-inner-{{ ai_gen_id }} h2,
+  .ai-accordion-content-inner-{{ ai_gen_id }} h3,
+  .ai-accordion-content-inner-{{ ai_gen_id }} h4,
+  .ai-accordion-content-inner-{{ ai_gen_id }} h5,
+  .ai-accordion-content-inner-{{ ai_gen_id }} h6 {
+    margin: 0 0 12px 0;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} ul,
+  .ai-accordion-content-inner-{{ ai_gen_id }} ol {
+    margin: 0 0 16px 0;padding-left: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-header-{{ ai_gen_id }} {
+      padding: {{ block.settings.header_padding | times: 0.8}}px;
+      font-size: {{ block.settings.header_font_size | times: 0.9 }}px;min-height: 50px;
+    }
+
+    .ai-accordion-content-{{ ai_gen_id }}.active {
+      padding: {{ block.settings.content_padding | times: 0.8 }}px;
+    }
+
+    .ai-accordion-content-inner-{{ ai_gen_id }} {
+      font-size: {{ block.settings.content_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<collapsible-accordion-{{ ai_gen_id }}
+  class="ai-accordion-{{ ai_gen_id }}"
+  data-allow-multiple="{{ block.settings.allow_multiple_open }}"
+  {{ block.shopify_attributes }}
+>
+  {% for i in (1..5) %}
+    {% liquid
+      assign title_key = 'accordion_title_' | append: i
+      assign content_key = 'accordion_content_' | append: i
+      assign title = block.settings[title_key]
+      assign content = block.settings[content_key]
+    %}
+
+    {% if title != blank and content != blank %}
+      <div class="ai-accordion-item-{{ ai_gen_id }}">
+        <button
+          class="ai-accordion-header-{{ ai_gen_id }}"
+          aria-expanded="{% if forloop.first and block.settings.first_item_open %}true{% else %}false{% endif %}"
+          aria-controls="ai-accordion-content-{{ ai_gen_id }}-{{ i }}"
+          data-accordion-trigger>
+          <span>{{ title }}</span>
+          <svg
+            class="ai-accordion-icon-{{ ai_gen_id }}"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+        </button>
+        <div
+          class="ai-accordion-content-{{ ai_gen_id }}{% if forloop.first and block.settings.first_item_open %} active{% endif %}"
+          id="ai-accordion-content-{{ ai_gen_id }}-{{ i }}"data-accordion-content
+        >
+          <div class="ai-accordion-content-inner-{{ ai_gen_id }}">
+            {{ content }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</collapsible-accordion-{{ ai_gen_id }}><script>
+  (function() {
+    class CollapsibleAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.allowMultiple = this.dataset.allowMultiple === 'true';}
+
+      connectedCallback() {
+        this.triggers = this.querySelectorAll('[data-accordion-trigger]');
+        this.contents = this.querySelectorAll('[data-accordion-content]');
+        
+        this.setupEventListeners();this.initializeHeights();
+      }
+
+      setupEventListeners() {
+        this.triggers.forEach((trigger, index) => {
+          trigger.addEventListener('click', () => {
+            this.toggleAccordion(index);
+          });
+
+          trigger.addEventListener('keydown', (e) => {
+            this.handleKeyNavigation(e, index);
+          });
+        });
+      }
+
+      initializeHeights() {
+        this.contents.forEach((content) => {
+          if (content.classList.contains('active')) {
+            const inner = content.querySelector('.ai-accordion-content-inner-{{ ai_gen_id }}');
+            content.style.maxHeight = inner.scrollHeight + ({{ block.settings.content_padding }} * 2) + 'px';
+          }
+        });
+      }
+
+      toggleAccordion(index) {
+        const trigger = this.triggers[index];
+        const content = this.contents[index];
+        const inner = content.querySelector('.ai-accordion-content-inner-{{ ai_gen_id }}');
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+        if (!this.allowMultiple && !isExpanded) {
+          this.closeAllAccordions();
+        }
+
+        if (isExpanded) {
+          this.closeAccordion(trigger, content);
+        } else {
+          this.openAccordion(trigger, content, inner);
+        }
+      }
+
+      openAccordion(trigger, content, inner) {
+        trigger.setAttribute('aria-expanded', 'true');
+        content.classList.add('active');
+        content.style.maxHeight = inner.scrollHeight + ({{ block.settings.content_padding }} * 2) + 'px';
+      }
+
+      closeAccordion(trigger, content) {
+        trigger.setAttribute('aria-expanded', 'false');
+        content.classList.remove('active');
+        content.style.maxHeight = '0';
+      }
+
+      closeAllAccordions() {
+        this.triggers.forEach((trigger, index) => {
+          const content = this.contents[index];
+          this.closeAccordion(trigger, content);
+        });
+      }
+
+      handleKeyNavigation(e, currentIndex) {
+        let targetIndex;
+
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            targetIndex = currentIndex === this.triggers.length - 1 ? 0 : currentIndex + 1;
+            this.triggers[targetIndex].focus();
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            targetIndex = currentIndex === 0 ? this.triggers.length - 1 : currentIndex - 1;
+            this.triggers[targetIndex].focus();
+            break;
+          case 'Home':
+            e.preventDefault();
+            this.triggers[0].focus();
+            break;
+          case 'End':
+            e.preventDefault();
+            this.triggers[this.triggers.length - 1].focus();
+            break;
+        }
+      }
+    }
+
+    customElements.define('collapsible-accordion-{{ ai_gen_id }}', CollapsibleAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collapsible Accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple_open",
+      "label": "Allow multiple items open",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "first_item_open",
+      "label": "Open first item by default",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item1"
+    },
+    {
+      "type": "text",
+      "id": "accordion_title_1",
+      "label": "Title",
+      "default": "Frequently Asked Question1"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_content_1",
+      "label": "Content",
+      "default": "<p>This is the answer to your first frequently asked question. You can include detailed information here to help your customers understand your products or services better.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 2"
+    },
+    {
+      "type": "text",
+      "id": "accordion_title_2",
+      "label": "Title",
+      "default": "Frequently Asked Question 2"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_content_2",
+      "label": "Content",
+      "default": "<p>This is the answer to your second frequently asked question. You can format this content with<strong>bold text</strong>, <em>italic text</em>, and even include lists or links as needed.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 3"
+    },
+    {
+      "type": "text",
+      "id": "accordion_title_3",
+      "label": "Title",
+      "default": "Frequently Asked Question 3"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_content_3",
+      "label": "Content",
+      "default": "<p>This is the answer to your third frequently asked question. The accordion automatically adjusts its height based on the content length.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 4"
+    },
+    {
+      "type": "text",
+      "id": "accordion_title_4",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_content_4",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 5"
+    },
+    {
+      "type": "text",
+      "id": "accordion_title_5",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_content_5",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Style Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Header Style"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "Header background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "header_hover_color",
+      "label": "Header hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Header font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "header_font_weight",
+      "label": "Header font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "header_padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Header padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Content Style"
+    },
+    {
+      "type": "color",
+      "id": "content_background_color",
+      "label": "Content background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "content_text_color",
+      "label": "Content text color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "content_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Content font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "focus_color",
+      "label": "Focus outline color",
+      "default": "#005fcc"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collapsible Accordion"
+    }
+  ]
+}
+{% endschema %}
