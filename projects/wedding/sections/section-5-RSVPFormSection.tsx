@@ -1,9 +1,16 @@
 import * as React from "react";
-import { addPropertyControls, ControlType } from "framer";
+import { addPropertyControls, ControlType, motion } from "framer";
 
 // RSVPFormSection
 // Section for RSVP that only shows explanatory text + a CTA button
 // linking to the external Microsoft Forms URL. No embedded form.
+
+type TimeLeft = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
 
 type Props = {
   title: string;
@@ -15,6 +22,20 @@ type Props = {
 
 export default function RSVPFormSection(props: Props) {
   const { title, description, note } = props;
+
+  // Split description so that the first sentence (ending with '?')
+  // can be highlighted in a different display font.
+  let questionLine = "";
+  let descriptionRemainder = description;
+
+  if (description) {
+    const idx = description.indexOf("?");
+    if (idx !== -1) {
+      questionLine = description.slice(0, idx + 1).trim();
+      descriptionRemainder = description.slice(idx + 1).trim();
+    }
+  }
+
 
   return (
     <div
@@ -30,23 +51,36 @@ export default function RSVPFormSection(props: Props) {
         margin: "0 auto",
         fontFamily:
           "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        border: "4px solid #b6423c",
+        borderRadius: 8,
+        backgroundColor: "#F7F2E7",
+        backgroundImage:
+          "repeating-linear-gradient(135deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 1px, rgba(230,220,210,0.18) 1px, rgba(230,220,210,0.18) 3px)," +
+          "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 0.6px, transparent 0.6px)," +
+          "radial-gradient(circle at 3px 3px, rgba(0,0,0,0.06) 0, rgba(0,0,0,0.06) 0.5px, transparent 0.5px)",
+        backgroundSize: "auto, 4px 4px, 4px 4px",
+        backgroundBlendMode: "soft-light, normal, normal",
+        boxShadow: "0 18px 40px rgba(0,0,0,0.10)",
       }}
     >
       {title && (
         <h2
           style={{
             margin: 0,
-            marginBottom: 16,
-            fontSize: 26,
-            letterSpacing: 2,
-            textTransform: "uppercase",
+            marginBottom: 8,
+            fontSize: 36,
+            letterSpacing: 1,
+            textTransform: "none",
             color: "#b6423c",
-            fontFamily: "Dolce Gargia, serif",
+            fontFamily:
+              "'Sverige Script Demo', 'Dolce Gargia', 'Playfair Display', cursive",
+            fontWeight: 400,
           }}
         >
           {title}
         </h2>
       )}
+
 
       <div
         style={{
@@ -56,7 +90,22 @@ export default function RSVPFormSection(props: Props) {
           maxWidth: 520,
         }}
       >
-        {description && (
+        {questionLine && (
+          <p
+            style={{
+              margin: 0,
+              fontSize: 20,
+              lineHeight: 1.4,
+              color: "#262220",
+              fontFamily:
+                "'Dolce Gargia', 'Playfair Display', 'Times New Roman', serif",
+            }}
+          >
+            {questionLine}
+          </p>
+        )}
+
+        {descriptionRemainder && (
           <p
             style={{
               margin: 0,
@@ -65,7 +114,7 @@ export default function RSVPFormSection(props: Props) {
               color: "#262220",
             }}
           >
-            {description}
+            {descriptionRemainder}
           </p>
         )}
 
@@ -90,7 +139,7 @@ export default function RSVPFormSection(props: Props) {
             justifyContent: "flex-end",
           }}
         >
-          <a
+          <motion.a
             href={props.ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -110,9 +159,13 @@ export default function RSVPFormSection(props: Props) {
               textDecoration: "none",
               cursor: "pointer",
             }}
+            whileHover={{
+              scale: [1, 1.05, 1],
+              transition: { duration: 0.35, ease: "easeInOut" },
+            }}
           >
             {props.ctaLabel}
-          </a>
+          </motion.a>
         </div>
 
         {/* Form area intentionally removed – we only use the CTA button for now. */}
@@ -120,6 +173,7 @@ export default function RSVPFormSection(props: Props) {
     </div>
   );
 }
+
 
 addPropertyControls(RSVPFormSection, {
   title: {

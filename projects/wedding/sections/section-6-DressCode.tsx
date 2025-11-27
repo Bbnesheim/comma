@@ -1,7 +1,7 @@
 import * as React from "react";
 import { addPropertyControls, ControlType } from "framer";
 
-// DressCodeSection (Kleskode)
+// DressCodeSection
 // Simple text section for Friday / Saturday dress code.
 
 interface Props {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { addPropertyControls, ControlType } from "framer";
 
-// VenueInfoSection (Lokalet og adresse)
+// VenueInfoSection
 // Text section for Bellahøjgaard venue, address, transport and hotel info.
 
 interface Props {

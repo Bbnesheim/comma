@@ -1,7 +1,7 @@
 import * as React from "react";
 import { addPropertyControls, ControlType } from "framer";
 
-// ToastmastersSection (Toastmastere)
+// ToastmastersSection
 // Card-like section describing toastmasters and contact info.
 
 interface Props {

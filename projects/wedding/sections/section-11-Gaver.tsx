@@ -1,7 +1,7 @@
 import * as React from "react";
 import { addPropertyControls, ControlType } from "framer";
 
-// GiftsSection (Gaver)
+// GiftsSection
 // Text section explaining gift wishes / bryllupskonto.
 
 interface Props {
