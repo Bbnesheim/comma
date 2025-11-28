@@ -1,28 +1,31 @@
 import * as React from "react";
 import { addPropertyControls, ControlType } from "framer";
 
-// GiftsSection
-// Text section explaining gift wishes / bryllupskonto.
+// MapTextSection (section-9-1-map-text)
+// Small text box for the map heading + description.
+// Use this directly above the `VenueMapSection` map card in Framer.
 
-interface Props {
+type Props = {
   title: string;
   body: string;
-}
+  maxWidth: number;
+};
 
-export default function GiftsSection(props: Props) {
-  const { title, body } = props;
+export default function MapTextSection(props: Props) {
+  const { title, body, maxWidth } = props;
+  const contentWidth = maxWidth && maxWidth > 0 ? maxWidth : 960;
 
   return (
     <div
       style={{
         width: "100%",
-        height: "100%",
+        height: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: 20,
+        gap: 8,
         padding: 24,
         boxSizing: "border-box",
-        maxWidth: 720,
+        maxWidth: contentWidth,
         margin: "0 auto",
         fontFamily:
           "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -59,16 +62,24 @@ export default function GiftsSection(props: Props) {
   );
 }
 
-addPropertyControls(GiftsSection, {
+addPropertyControls(MapTextSection, {
   title: {
     type: ControlType.String,
     title: "Overskrift",
-    defaultValue: "Gaver",
+    defaultValue: "Kart og veibeskrivelse",
   },
   body: {
     type: ControlType.String,
     title: "Tekst",
     defaultValue:
-      "Vi vet at dere har brukt penger på å reise til København for å feire oss, og vi forventer derfor ingen gaver. Dersom noen insisterer på å gi, setter vi pris på et lite bidrag til bryllupsreisen vår. Bryllupskonto: 9053.07.67514.",
+      "Se hvor Bellahøjgaard ligger, og få et visuelt overblikk over området rundt bryllupslokalet.",
+  },
+  maxWidth: {
+    type: ControlType.Number,
+    title: "Maks bredde",
+    defaultValue: 960,
+    min: 400,
+    max: 1400,
+    displayStepper: true,
   },
 });

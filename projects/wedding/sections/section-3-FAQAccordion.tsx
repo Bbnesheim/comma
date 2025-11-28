@@ -54,7 +54,8 @@ export default function FAQAccordion(props: Props) {
         <h2
           style={{
             margin: 0,
-            fontSize: 26,
+            // Responsive section heading using CSS clamp instead of JS hook.
+            fontSize: "clamp(20px, 3vw, 26px)",
             letterSpacing: 2,
             textTransform: "uppercase",
             color: "#b6423c",

@@ -71,9 +71,9 @@ export default function RSVPFormSection(props: Props) {
             fontSize: 36,
             letterSpacing: 1,
             textTransform: "none",
+            // Headline: Dolce Gargia in brand red.
             color: "#b6423c",
-            fontFamily:
-              "'Sverige Script Demo', 'Dolce Gargia', 'Playfair Display', cursive",
+            fontFamily: "'Dolce Gargia', 'Playfair Display', serif",
             fontWeight: 400,
           }}
         >

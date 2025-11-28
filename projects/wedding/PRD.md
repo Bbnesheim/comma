@@ -105,6 +105,14 @@ The site consists of the following top‑level pages/sections (see `FRAMER_SECTI
 
 These components are the building blocks for all core sections and must remain copy‑paste‑ready for Framer’s code environment.
 
+### 5.1 Implementation status (code components, local repo)
+
+_As of 2025‑11‑27:_
+
+- Implemented in `/sections`: `WeddingDayTimeline`, `FAQAccordion`, `MapEmbed`, `RSVPFormSection`, `DressCodeSection`, `ToastmastersSection`, `VenueInfoSection`, `VenueMapSection`, `OvernattingSection`, `GiftsSection`, `WeddingCountdownWidget`.
+- Not yet implemented in this repo: a dedicated hero `WeddingCountdown` component as described above; currently only `WeddingCountdownWidget` (compact pill) exists for countdown usage.
+- Test coverage: an initial unit test suite for `RSVPFormSection` exists at `sections/__tests__/section-5-RSVPFormSection.test.tsx` (description splitting and styling). No broader automated test setup (Jest/Vitest config or CI) is configured yet in this repo.
+
 ## 6. Visual & brand requirements
 
 Visual requirements are detailed in `BRAND_GUIDE.md`. This section summarises key constraints that the implementation must respect.
@@ -243,3 +251,13 @@ The site is considered ready when:
 4. Primary headings use a consistent display font that matches the brand guide.
 5. Layout works without horizontal scroll and looks correct on mobile and desktop.
 6. All copy has been proof‑read by the couple and any last‑minute text changes are reflected both in Framer and in the local markdown docs.
+
+## 11. Current project status (high level)
+
+_As of 2025‑11‑27 (local repo perspective):_
+
+- Documentation: `PRD.md`, `BRAND_GUIDE.md`, `WEDDING_SITE_CONTENT.md`, `FRAMER_SECTIONS.md`, `DEV_ACTION_PLAN.md` and `AGENT_WORKFLOW.md` are present and consistent with each other.
+- Code components: All core content sections and widgets listed in §5 are implemented in `/sections`, except the hero-level `WeddingCountdown` (only the floating `WeddingCountdownWidget` exists at this stage).
+- Testing: Initial unit tests exist for `RSVPFormSection` as described in §5.1; a broader automated test runner and CI pipeline are not yet configured in this repo.
+- Framer project: This PRD assumes that pages, navigation, and layout are built in Framer per `DEV_ACTION_PLAN.md` and `FRAMER_SECTIONS.md`. Actual Framer build status is tracked inside the Framer project rather than this repo.
+- Launch: Domain setup, final cross-device QA, and the publish steps described in `DEV_ACTION_PLAN.md` §9 remain to be completed.

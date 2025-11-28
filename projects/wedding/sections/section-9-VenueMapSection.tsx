@@ -11,137 +11,61 @@ interface Props {
   url: string;
 }
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    const update = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  return isMobile;
-}
-
 export default function VenueMapSection(props: Props) {
   const { title, description, url } = props;
 
   const hasMap = Boolean(url && url.trim().length > 0);
-  const isMobile = useIsMobile();
 
+  // This section now renders **only** the map inside a bordered card.
+  // The heading/description text should be placed using the
+  // separate `section-9-1-map-text` component.
   return (
     <div
       style={{
+        // Outermost card: acts as the red outline directly around the map
         width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: 20,
-        padding: 24,
-        boxSizing: "border-box",
+        maxWidth: 400,
+        aspectRatio: "1 / 1",
+        margin: "0 auto",
         fontFamily:
           "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        border: "4px solid #b6423c",
+        borderRadius: 8,
+        overflow: "hidden",
+        backgroundColor: "#F7F2E7",
+        boxShadow: "0 18px 40px rgba(0,0,0,0.10)",
       }}
     >
-      {title && (
-        <h2
+      {hasMap ? (
+        <iframe
+          src={url}
+          title={title || "Kart  Bellahgaard"}
           style={{
-            margin: 0,
-            fontSize: 26,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: "#b6423c",
-            fontFamily: "Dolce Gargia, serif",
+            border: 0,
+            width: "100%",
+            height: "100%",
           }}
-        >
-          {title}
-        </h2>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          gap: isMobile ? 16 : 24,
-          alignItems: isMobile ? "flex-start" : "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Text column on the left */}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      ) : (
         <div
           style={{
-            flex: 1,
-            maxWidth: isMobile ? "100%" : 420,
+            width: "100%",
+            height: "100%",
             display: "flex",
-            flexDirection: "column",
-            alignItems: isMobile ? "flex-start" : "flex-end",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            fontSize: 14,
+            opacity: 0.7,
+            padding: 24,
           }}
         >
-          {description && (
-            <p
-              style={{
-                margin: 0,
-                fontSize: 14,
-                lineHeight: 1.6,
-                color: "#262220",
-                textAlign: isMobile ? "left" : "right",
-              }}
-            >
-              {description}
-            </p>
-          )}
+          Lim inn et Google Maps-embed-URL i egenskapene til VenueMapSection for å
+          vise kartet.
         </div>
-
-        {/* Map card on the right */}
-        <div
-          style={{
-            flex: 1,
-            minHeight: 260,
-            borderRadius: 24,
-            overflow: "hidden",
-            background: "#F8F3ED",
-            boxShadow: "0 16px 40px rgba(0,0,0,0.12)",
-            border: "1px solid rgba(0,0,0,0.06)",
-            maxWidth: isMobile ? "100%" : 520,
-            marginTop: isMobile ? 16 : 0,
-          }}
-        >
-          {hasMap ? (
-            <iframe
-              src={url}
-              title="Kart – Bellahøjgaard"
-              style={{
-                border: 0,
-                width: "100%",
-                height: "100%",
-              }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          ) : (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                fontSize: 14,
-                opacity: 0.7,
-                padding: 24,
-              }}
-            >
-              Lim inn et Google Maps-embed-URL i egenskapene til VenueMapSection for å
-              vise kartet.
-            </div>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -152,9 +76,12 @@ addPropertyControls(VenueMapSection, {
     title: "Overskrift",
     defaultValue: "Kart og veibeskrivelse",
   },
+  // Description is kept as a prop so you can still store text in the panel,
+  // but it is no longer rendered here. Use the `MapTextSection` component
+  // (section-9-1-map-text.tsx) to show the text on the page.
   description: {
     type: ControlType.String,
-    title: "Beskrivelse",
+    title: "(Brukes i tekstseksjon)",
     defaultValue:
       "Se hvor Bellahøjgaard ligger, og få et visuelt overblikk over området rundt bryllupslokalet.",
   },

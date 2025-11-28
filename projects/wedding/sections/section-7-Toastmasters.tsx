@@ -47,11 +47,12 @@ export default function ToastmastersSection(props: Props) {
         <h2
           style={{
             margin: 0,
-            fontSize: 26,
+            fontSize: "clamp(20px, 3vw, 26px)",
             letterSpacing: 2,
             textTransform: "uppercase",
+            // Headline: Dolce Gargia in brand red.
             color: "#b6423c",
-            fontFamily: "Dolce Gargia, serif",
+            fontFamily: "'Dolce Gargia', 'Playfair Display', serif",
           }}
         >
           {title}

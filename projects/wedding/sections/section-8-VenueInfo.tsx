@@ -11,8 +11,12 @@ interface Props {
   address: string;
   transportTitle: string;
   transport: string;
-  hotelTitle: string;
-  hotel: string;
+  // Typography controls
+  titleFontSize: number;
+  titleFontFamily: string;
+  bodyFontSize: number;
+  bodyFontFamily: string;
+  labelFontSize: number;
 }
 
 export default function VenueInfoSection(props: Props) {
@@ -23,8 +27,11 @@ export default function VenueInfoSection(props: Props) {
     address,
     transportTitle,
     transport,
-    hotelTitle,
-    hotel,
+    titleFontSize,
+    titleFontFamily,
+    bodyFontSize,
+    bodyFontFamily,
+    labelFontSize,
   } = props;
 
   return (
@@ -47,11 +54,18 @@ export default function VenueInfoSection(props: Props) {
         <h2
           style={{
             margin: 0,
-            fontSize: 26,
+            // If a custom size is provided, use it; otherwise keep the responsive clamp.
+            fontSize:
+              typeof titleFontSize === "number" && titleFontSize > 0
+                ? titleFontSize
+                : "clamp(20px, 3vw, 26px)",
             letterSpacing: 2,
             textTransform: "uppercase",
             color: "#b6423c",
-            fontFamily: "Dolce Gargia, serif",
+            fontFamily:
+              titleFontFamily && titleFontFamily.trim().length > 0
+                ? titleFontFamily
+                : "'Dolce Gargia', 'Playfair Display', serif",
           }}
         >
           {title}
@@ -70,24 +84,51 @@ export default function VenueInfoSection(props: Props) {
           <p
             style={{
               margin: 0,
-              fontSize: 15,
+              fontSize: bodyFontSize || 15,
               lineHeight: 1.6,
               color: "#262220",
+              fontFamily:
+                bodyFontFamily && bodyFontFamily.trim().length > 0
+                  ? bodyFontFamily
+                  : "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             }}
           >
             {intro}
           </p>
         )}
 
-        <InfoBlock label={addressLabel} text={address} />
-        <InfoBlock label={transportTitle} text={transport} />
-        <InfoBlock label={hotelTitle} text={hotel} />
+        <InfoBlock
+          label={addressLabel}
+          text={address}
+          labelFontSize={labelFontSize}
+          bodyFontSize={bodyFontSize}
+          bodyFontFamily={bodyFontFamily}
+        />
+        <InfoBlock
+          label={transportTitle}
+          text={transport}
+          labelFontSize={labelFontSize}
+          bodyFontSize={bodyFontSize}
+          bodyFontFamily={bodyFontFamily}
+        />
       </div>
     </div>
   );
 }
 
-function InfoBlock({ label, text }: { label: string; text: string }) {
+function InfoBlock({
+  label,
+  text,
+  labelFontSize,
+  bodyFontSize,
+  bodyFontFamily,
+}: {
+  label: string;
+  text: string;
+  labelFontSize?: number;
+  bodyFontSize?: number;
+  bodyFontFamily?: string;
+}) {
   if (!label && !text) return null;
 
   return (
@@ -101,7 +142,7 @@ function InfoBlock({ label, text }: { label: string; text: string }) {
       {label && (
         <div
           style={{
-            fontSize: 15,
+            fontSize: labelFontSize || 15,
             fontWeight: 600,
             letterSpacing: 1.2,
             textTransform: "uppercase",
@@ -114,10 +155,14 @@ function InfoBlock({ label, text }: { label: string; text: string }) {
       {text && (
         <div
           style={{
-            fontSize: 14,
+            fontSize: bodyFontSize || 14,
             lineHeight: 1.6,
             color: "#262220",
             opacity: 0.9,
+            fontFamily:
+              bodyFontFamily && bodyFontFamily.trim().length > 0
+                ? bodyFontFamily
+                : "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           }}
         >
           {text}
@@ -139,6 +184,39 @@ addPropertyControls(VenueInfoSection, {
     defaultValue:
       "Bellahøjgaard ligger like utenfor Københavns sentrumskjerne og er lett tilgjengelig med kollektivtransport. Vielsen vil finne sted i Havesalen og dens tilhørende hage, mens middagen og festen blir i Rænessancesalen.",
   },
+  // Typography controls (optional)
+  titleFontSize: {
+    type: ControlType.Number,
+    title: "Tittel str.",
+    defaultValue: 26,
+    min: 12,
+    max: 64,
+  },
+  titleFontFamily: {
+    type: ControlType.String,
+    title: "Tittel font",
+    defaultValue: "'Dolce Gargia', 'Playfair Display', serif",
+  },
+  bodyFontSize: {
+    type: ControlType.Number,
+    title: "Brødtekst str.",
+    defaultValue: 15,
+    min: 10,
+    max: 32,
+  },
+  bodyFontFamily: {
+    type: ControlType.String,
+    title: "Brødtekst font",
+    defaultValue:
+      "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  },
+  labelFontSize: {
+    type: ControlType.Number,
+    title: "Label str.",
+    defaultValue: 15,
+    min: 10,
+    max: 32,
+  },
   addressLabel: {
     type: ControlType.String,
     title: "Adresse label",
@@ -159,16 +237,5 @@ addPropertyControls(VenueInfoSection, {
     title: "Transport",
     defaultValue:
       "Buss 5C til Hyrdevangen (Frederikssundsvej). Bussen går fra bla. København Hovedbanegård, Rådhusplassen og Nørreport. Sentrale metrolinjer vil stoppe på enten Hovedbanegården eller Nørreport. Appen DOT er enklest å bruke for kjøp av kollektivbillett.",
-  },
-  hotelTitle: {
-    type: ControlType.String,
-    title: "Hotell label",
-    defaultValue: "Hotell",
-  },
-  hotel: {
-    type: ControlType.String,
-    title: "Hotelltekst",
-    defaultValue:
-      "Sent ute med å bestille hotell? Bookingkoden BDAN180726 vil gi følgende fastpris på Scandic Hotel Copenhagen: Standard værelse til 1 person: 1500DKK pr. rom pr. natt inkl. frokost. Standard værelse til 2 personer: 1600DKK pr. rom pr. natt inkl. frokost.",
   },
 });

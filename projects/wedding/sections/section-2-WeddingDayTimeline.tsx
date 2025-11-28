@@ -30,7 +30,7 @@ type Props = {
   time5: string;
   label5: string;
   time6: string;
-  label6: string;
+  label6: string; 
   time7: string;
   label7: string;
 };
@@ -67,7 +67,14 @@ export default function WeddingDayTimeline(props: Props) {
     { time: time7, label: label7, side: "right" },
   ];
 
-  const items = rawItems.filter((item) => item.time && item.label);
+  // Show an item as long as either time or label has content.
+  // In Framer it's easy to accidentally leave one of the fields empty, and
+  // previously that would hide the entire row and make the timeline look empty.
+  const items = rawItems.filter((item) => {
+    const time = item.time?.trim();
+    const label = item.label?.trim();
+    return Boolean(time || label);
+  });
 
   return (
     <motion.div
@@ -82,7 +89,9 @@ export default function WeddingDayTimeline(props: Props) {
         justifyContent: "center",
         background,
         color: textColor,
-        padding: 32,
+        // Slightly smaller horizontal padding on medium/small screens so the
+        // timeline container never overflows the viewport.
+        padding: "24px 16px",
         boxSizing: "border-box",
       }}
     >
@@ -93,7 +102,10 @@ export default function WeddingDayTimeline(props: Props) {
           maxWidth: 720,
           height: "100%",
           maxHeight: 900,
-          padding: 40,
+          // Responsive inner padding as well, to avoid pushing content past
+          // the right edge on medium breakpoints.
+          padding: "clamp(24px, 4vw, 40px)",
+          margin: "0 auto",
           boxSizing: "border-box",
           // Let the content sit directly on the section background (no card box)
           background: "transparent",
@@ -107,11 +119,12 @@ export default function WeddingDayTimeline(props: Props) {
               width: "100%",
               textAlign: "center",
               marginBottom: 24,
-              fontSize: 40,
+              // Responsive title purely via CSS: large on desktop, smaller on mobile.
+              fontSize: "clamp(24px, 4vw, 40px)",
               lineHeight: 1.1,
               letterSpacing: 1,
-              // Use wedding project display fonts from BRAND_GUIDE (custom/imported in Framer)
-              fontFamily: "'Dolce Gargia', 'Sverige Script Demo', 'Playfair Display', serif",
+              // Use wedding project display font – Dolce Gargia – with serif fallbacks.
+              fontFamily: "'Dolce Gargia', 'Playfair Display', serif",
               fontWeight: 400,
               color: accentColor,
             }}
@@ -205,9 +218,18 @@ function TimelineRow({ item, accentColor, textColor }: RowProps) {
           fontFamily:
             "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           opacity: isLeft ? 1 : 0.4,
+          // Add a bit of padding so text never touches the central line.
+          paddingRight: 10,
         }}
       >
-        {isLeft && <TimelineText item={item} align="right" textColor={textColor} />}
+        {isLeft && (
+          <TimelineText
+            item={item}
+            align="right"
+            textColor={textColor}
+            accentColor={accentColor}
+          />
+        )}
       </div>
 
       {/* Right column (left-aligned text) */}
@@ -217,9 +239,18 @@ function TimelineRow({ item, accentColor, textColor }: RowProps) {
           fontFamily:
             "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           opacity: !isLeft ? 1 : 0.4,
+          // Mirror padding on the right side as well.
+          paddingLeft: 10,
         }}
       >
-        {!isLeft && <TimelineText item={item} align="left" textColor={textColor} />}
+        {!isLeft && (
+          <TimelineText
+            item={item}
+            align="left"
+            textColor={textColor}
+            accentColor={accentColor}
+          />
+        )}
       </div>
     </div>
   );
@@ -229,9 +260,10 @@ type TextProps = {
   item: TimelineItem;
   align: "left" | "right";
   textColor: string;
+  accentColor: string;
 };
 
-function TimelineText({ item, align, textColor }: TextProps) {
+function TimelineText({ item, align, textColor, accentColor }: TextProps) {
   return (
     <div
       style={{
@@ -243,17 +275,20 @@ function TimelineText({ item, align, textColor }: TextProps) {
     >
       <div
         style={{
-          fontSize: 11,
+          // Slightly smaller on narrow screens, but never too tiny.
+          fontSize: "clamp(9px, 1.4vw, 11px)",
           letterSpacing: 2,
           textTransform: "uppercase",
-          color: textColor,
+          // Day & time highlighted in accent colour and bold.
+          color: accentColor,
+          fontWeight: 700,
         }}
       >
         {item.time}
       </div>
       <div
         style={{
-          fontSize: 11,
+          fontSize: "clamp(9px, 1.4vw, 11px)",
           letterSpacing: 2,
           textTransform: "uppercase",
           color: textColor,
@@ -286,74 +321,77 @@ addPropertyControls(WeddingDayTimeline, {
     title: "Aksent",
     defaultValue: "#b6423c",
   },
+  // Default timeline content is wired to the latest program table
+  // (PDF) for Friday 17. juli and Saturday 18. juli. You can override all of
+  // these from the right‑hand panel in Framer.
   time1: {
     type: ControlType.String,
     title: "Tid 1",
-    defaultValue: "FREDAG",
+    defaultValue: "FREDAG · CA. 18:00",
   },
   label1: {
     type: ControlType.String,
     title: "Tittel 1",
-    defaultValue: "ANKOMST KØBENHAVN",
+    defaultValue: "SOSIAL SAMMENKOMST (TBA)",
   },
   time2: {
     type: ControlType.String,
     title: "Tid 2",
-    defaultValue: "KVELD",
+    defaultValue: "LØRDAG · CA. 08:00",
   },
   label2: {
     type: ControlType.String,
     title: "Tittel 2",
-    defaultValue: "UFORMELL SAMLING",
+    defaultValue: "SIGHTSEEING / JOGGETUR MED BRUDGOMMEN",
   },
   time3: {
     type: ControlType.String,
     title: "Tid 3",
-    defaultValue: "08:00",
+    defaultValue: "LØRDAG · CA. 14:00",
   },
   label3: {
     type: ControlType.String,
     title: "Tittel 3",
-    defaultValue: "JOGGETUR MED BRUDGOMMEN",
+    defaultValue: "OPPMØTE – BELLAHØJGAARD",
   },
   time4: {
     type: ControlType.String,
     title: "Tid 4",
-    defaultValue: "FORMIDDAG",
+    defaultValue: "LØRDAG · CA. 14:30",
   },
   label4: {
     type: ControlType.String,
     title: "Tittel 4",
-    defaultValue: "EGEN TID I BYEN",
+    defaultValue: "VIELSE PÅ BELLAHØJGAARD (DETALJER KOMMER)",
   },
   time5: {
     type: ControlType.String,
     title: "Tid 5",
-    defaultValue: "14:30",
+    defaultValue: "LØRDAG · CA. 15:00",
   },
   label5: {
     type: ControlType.String,
     title: "Tittel 5",
-    defaultValue: "VIELSE PÅ BELLAHØJGAARD",
+    defaultValue: "BILDER OG RECEPTION",
   },
   time6: {
     type: ControlType.String,
     title: "Tid 6",
-    defaultValue: "ETTERPÅ",
+    defaultValue: "LØRDAG · CA. 17:00",
   },
   label6: {
     type: ControlType.String,
     title: "Tittel 6",
-    defaultValue: "BOBLER, KAKE & BILDER",
+    defaultValue: "MIDDAG PÅ BELLAHØJGAARD",
   },
   time7: {
     type: ControlType.String,
     title: "Tid 7",
-    defaultValue: "KVELD",
+    defaultValue: "SENT KVELD",
   },
   label7: {
     type: ControlType.String,
     title: "Tittel 7",
-    defaultValue: "MIDDAG & FEST",
+    defaultValue: "MIDDAG & FESTEN FORTSETTER",
   },
 });

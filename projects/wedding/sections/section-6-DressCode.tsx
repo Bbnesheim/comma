@@ -23,8 +23,12 @@ export default function DressCodeSection(props: Props) {
         display: "flex",
         flexDirection: "column",
         gap: 20,
-        padding: 24,
+        // Match other sections: keep safe horizontal padding so content
+        // doesn’t disappear off the right side on medium screens.
+        padding: "24px 16px",
         boxSizing: "border-box",
+        maxWidth: 960,
+        margin: "0 auto",
         alignItems: "flex-end",
         fontFamily:
           "Manrope, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -34,11 +38,13 @@ export default function DressCodeSection(props: Props) {
         <h2
           style={{
             margin: 0,
-            fontSize: 26,
+            // Responsive heading using CSS clamp only.
+            fontSize: "clamp(20px, 3vw, 26px)",
             letterSpacing: 2,
             textTransform: "uppercase",
+            // Headline: Dolce Gargia in brand red.
             color: "#b6423c",
-            fontFamily: "Dolce Gargia, serif",
+            fontFamily: "'Dolce Gargia', 'Playfair Display', serif",
             textAlign: "right",
           }}
         >
