@@ -6,14 +6,13 @@ import { addPropertyControls, ControlType } from "framer";
 
 interface Props {
   title: string;
-  intro: string;
   bookingCode: string;
   bookingUrl: string;
   buttonLabel: string;
 }
 
 export default function OvernattingSection(props: Props) {
-  const { title, intro, bookingCode, bookingUrl, buttonLabel } = props;
+  const { title, bookingCode, bookingUrl, buttonLabel } = props;
 
   return (
     <div
@@ -44,19 +43,6 @@ export default function OvernattingSection(props: Props) {
         >
           {title}
         </h2>
-      )}
-
-      {intro && (
-        <p
-          style={{
-            margin: 0,
-            fontSize: 15,
-            lineHeight: 1.6,
-            color: "#262220",
-          }}
-        >
-          {intro}
-        </p>
       )}
 
       {(bookingCode || (bookingUrl && buttonLabel)) && (
@@ -120,12 +106,6 @@ addPropertyControls(OvernattingSection, {
     type: ControlType.String,
     title: "Overskrift",
     defaultValue: "Overnatting / Hotell",
-  },
-  intro: {
-    type: ControlType.String,
-    title: "Tekst",
-    defaultValue:
-      "Sent ute med å bestille hotell? Vi har fastpris på Scandic Hotel Copenhagen for 1 eller 2 personer pr. natt inkl. frokost. Klikk på knappen under for å booke rom direkte hos hotellet.",
   },
   bookingCode: {
     type: ControlType.String,
