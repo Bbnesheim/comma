@@ -19,6 +19,18 @@ Rebuild the COMMA.records storefront on Shopify’s Dawn theme with a fully cust
 1. Increase engagement on landing content (time on page, scroll depth).
 2. Improve discoverability and sales of key releases (albums, bundles, merch).
 3. Build a recognizable brand presence (visual identity, typography, motion).
+4. Express the COMMA. brand through a focused visual system (dark, minimal, high-contrast) and
+   artist-centred storytelling.
+
+**Brand & Visual Direction (from research)**
+
+- Primary colours:
+  - `#121212` (dark) for backgrounds and hero sections.
+  - `#FDFDFD` (off-white) for text and areas requiring visual relief.
+- Secondary accent colours (cool grey, electric blue, violet/purple, soft beige) support but never
+  overpower the primary palette.
+- Overall feel should be clean, minimal, and artwork-led, with strong typography and plenty of
+  negative space.
 
 **Success Metrics (post-launch)**
 
@@ -82,9 +94,10 @@ Rebuild the COMMA.records storefront on Shopify’s Dawn theme with a fully cust
 
 1. Land on homepage → see latest or highlighted release → click into product → purchase.
 2. Browse catalog by format/series (e.g., vinyl, digital, compilations) from nav or homepage.
-3. Discover editorial content / blog posts (e.g., mix series, interviews).
-4. Sign up for newsletter for release announcements.
-5. Quickly access info like About/Story, Contact, and Social links.
+3. Land on homepage → discover artists via featured carousel/list → click into artist landing page.
+4. Discover editorial content / blog posts (e.g., mix series, interviews).
+5. Sign up for newsletter for release announcements.
+6. Quickly access info like About/Story, Contact, and Social links.
 
 ## 5. Functional Requirements
 
@@ -211,7 +224,23 @@ Each of these will be built as independent, optional sections that can be reorde
 - Ensure new header and footer wrap around these templates.
 - Visual alignment (typography/colors) with new homepage styles.
 
-### 5.6 Non-Functional Requirements
+### 5.6 Artist Landing Pages
+
+**Requirements**
+
+- Each artist has a dedicated landing page template composed of modular sections:
+  - Hero banner with large artwork/image and artist name overlay.
+  - Biography section (short-form narrative, aligned with blog tone).
+  - Discography section listing releases with artwork, dates, and links to products/streams.
+  - Upcoming shows list with dates, venues, and optional CTAs.
+  - Media gallery (photos/videos), favouring high-contrast imagery.
+  - Contact/booking section for press and collaboration enquiries.
+- All content (images, copy, releases, shows) should be configurable via Shopify’s theme editor and/or
+  structured content (e.g., metaobjects, collections) rather than hard-coded.
+- Layout and styling must stay consistent with the global palette and typography defined in the
+  research/brand guide.
+
+### 5.7 Non-Functional Requirements
 
 - **Performance**: Maintain or improve Dawn’s baseline; no heavy third-party scripts by default.
 - **Accessibility**:
@@ -220,6 +249,9 @@ Each of these will be built as independent, optional sections that can be reorde
 - **SEO**:
   - Maintain/manage meta titles, descriptions, and structured headings.
   - Avoid blocking important content behind JS-only loads.
+- **Brand Alignment**:
+  - Use `#121212` / `#FDFDFD` as the primary light/dark palette, with accent colours applied sparingly.
+  - Ensure artist-first content hierarchy on homepage and detail pages.
 
 ## 6. Wireframe Overview (Textual)
 
