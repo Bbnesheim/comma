@@ -101,58 +101,102 @@ Rebuild the COMMA.records storefront on Shopify’s Dawn theme with a fully cust
 
 ## 5. Functional Requirements
 
-### 5.1 Global Navigation & Header (High Priority)
+### 5.1 Global Navigation, Hero Integration & Announcement Bar (High Priority)
 
 **Requirements**
 
-1. **Logo & Brand**
-   - Left- or center-aligned COMMA.records logo.
-   - Logo links to homepage.
+1. **Homepage Navigation (within Hero Section)**
+   - On the homepage, navigation and hero live in a single full-height "stage" section.
+   - The COMMA. logo and primary entry points (for example, “Explore artists”, “Listen to latest release”) are
+     expressed as CTAs and minimal controls within the hero, rather than a separate heavy header bar.
+   - A small menu or icon control may appear overlaid at the top-right of the hero to open the global overlay
+     menu if needed.
 
-2. **Primary Navigation**
-   - Configurable menu items (e.g., “Releases”, “Shop”, “About”, “Blog”, “Events”).
-   - Support for at least one dropdown / mega-menu for catalog navigation (optional in v1).
+2. **Non-Homepage Top Nav / Announcement Bar**
+   - On all non-homepage templates (product, artist, releases, journal, etc.), the top-of-page navigation is a
+     compact announcement bar.
+   - Left: a back arrow (to the previous page or a configurable default, typically the homepage).
+   - Center: announcement text (for example, latest release, tour info, shipping note).
+   - Right: a small hamburger icon that opens a full-screen or drawer overlay menu with site navigation.
 
-3. **Utility Icons**
-   - Cart icon with item count.
-   - Account / login (if enabled).
-   - Direct access to search (icon or explicit “Search” label).
+3. **Primary Navigation Structure**
+   - The overlay menu contains configurable menu items (for example, “Artists”, “Releases”, “Store”, “Journal”,
+     “About”, “Events”).
+   - Menu items are managed via Shopify navigation so they can be reused consistently across templates.
 
-4. **Behavior**
-   - Sticky header on scroll (desktop and mobile).
-   - Responsive layout:
-     - Desktop: full nav visible.
-     - Mobile: condensed header with hamburger menu that opens full-screen or drawer menu.
+4. **Utility Icons**
+   - Cart, account/login (if enabled), and search are accessible via the overlay menu and/or compact icons near
+     the top edge of the viewport.
 
-5. **Customization**
-   - Background/color scheme toggles (light/dark).
-   - Optional announcement bar slot (release announcement, shipping info, etc.).
+5. **Behavior**
+   - The announcement bar/top nav is sticky on scroll for non-homepage templates.
+   - On the homepage, the hero “stage” occupies the above-the-fold area; any overlaid menu controls remain
+     accessible as the user scrolls.
+
+6. **Customization**
+   - Theme settings control announcement text, back-link behavior, and overlay menu content.
+   - Colors and hover states respect the `#121212` / `#FDFDFD` palette with accents used sparingly.
 
 ### 5.2 Hero Section (Homepage)
 
 **Requirements**
 
 1. **Content Elements**
-   - Tagline or category label (e.g., “New Release”).
-   - Main heading (release title or key message).
+   - Tagline or category label (e.g., “New Release” or “Label / Management / Store”).
+   - Main heading (release title or key message, or a brand-level statement like “Progressive sounds from Oslo and beyond”).
    - Sub-copy (1–3 lines).
-   - Primary CTA (e.g., “Listen / Buy”, “View Release”).
-   - Optional secondary CTA (e.g., “View Catalog”).
-   - Featured cover art / visual (full-bleed image or artwork).
+   - Primary CTA (e.g., “Explore artists”, “Listen / Buy”, “View Release”).
+   - Optional secondary CTA (e.g., “View catalog”, “View journal”).
+   - Featured cover art / visual (full-bleed image, artwork, or abstract branded visual).
+   - Optional small menu or icon control overlaid in the top-right to open the global overlay menu.
 
 2. **Behavior & Layout**
-   - Desktop: split layout or full-bleed hero:
-     - Option 1: Left = text, Right = large artwork.
-     - Option 2: Full-bleed artwork background with text overlay.
-   - Mobile: stacked (artwork above text and CTAs).
-   - Support for background color overlays and image crop ratios.
+   - Desktop: full-height hero "stage" on `#121212`:
+     - Centred or left-aligned text block with eyebrow, headline, and CTAs.
+     - Visual can appear as large artwork alongside or behind text (split or full-bleed variant), but the
+       overall composition should feel like a single stage rather than separate header + hero.
+   - Mobile: stacked layout with visual and text; CTAs become full-width buttons.
+   - Support for background colour overlays and image crop ratios.
 
 3. **Dynamic Content**
-   - Option to link hero to:
+   - Option to link hero CTAs to:
      - Specific product,
      - Specific collection,
+     - Specific artist,
      - Specific blog post/page.
    - Content controlled via theme editor (no code change needed to update hero).
+
+4. **Section Spec: `hero-stage-ticker`**
+
+   This section combines the homepage hero, minimal navigation affordances, and the bottom ticker.
+
+   - **Section name (Shopify admin)**: "Hero + Navigation Stage (COMMA)".
+   - **Layout**:
+     - Full-viewport height on first load, with vertical centering of main content.
+     - Top overlay row (optional) with logo and a compact menu icon to open the overlay navigation.
+     - Main content block (eyebrow, headline, subcopy, CTAs).
+     - Bottom edge reserved for a ticker bar.
+   - **Required settings**:
+     - `eyebrow_text` (text): small label above heading.
+     - `heading` (text): main hero headline.
+     - `subcopy` (rich text): short supporting paragraph.
+     - `primary_cta_label` / `primary_cta_link`.
+     - `secondary_cta_label` / `secondary_cta_link` (optional).
+     - `background_image` (image picker) and/or `background_color` (colour, default `#121212`).
+     - `show_logo` (boolean): toggle COMMA. logo in the top overlay row.
+     - `show_menu_icon` (boolean): toggle the small menu icon that opens the global overlay menu.
+     - `ticker_text` (text or rich text): content for the marquee.
+     - `ticker_speed` (range): animation speed preset (slow/medium/fast).
+   - **Blocks (optional)**:
+     - "Badge" block: small pill labels under the headline (e.g., "New release", "Tour").
+     - "Secondary link" block: small text links near CTAs (e.g., “View tracklist”).
+   - **Behaviour**:
+     - On scroll, the hero collapses naturally into the rest of the homepage sections; any overlay menu
+       controls remain positioned at the top edge.
+     - Ticker runs continuously and loops its content; on mobile it must remain readable and not too fast.
+   - **Brand constraints**:
+     - Background must use `#121212` as the base; text defaults to `#FDFDFD`.
+     - Accent colours on CTAs and ticker bar are taken from theme settings and used sparingly.
 
 ### 5.3 Homepage Content Sections (Wireframes + Build)
 
@@ -216,13 +260,24 @@ Each of these will be built as independent, optional sections that can be reorde
 - Optional new supporting sections below product info:
   - “More from this artist/label”, “You may also like” (future scope).
 
-### 5.5 Blog & Article Pages (Using Existing Templates)
+### 5.5 Blog & Article Pages (Editorial Layout)
 
 **Requirements**
 
-- Keep existing `main-blog` and `main-article` sections.
-- Ensure new header and footer wrap around these templates.
-- Visual alignment (typography/colors) with new homepage styles.
+- Keep existing `main-blog` and `main-article` sections for basic blog index and article layouts.
+- Introduce a new editorial article section (for example, `main-article-comma`) and template (for example,
+  `article.editorial`) for high-priority stories.
+- Editorial article layout should provide:
+  - A strong hero block on `#121212` with category label, large title, subhead/standfirst, meta row (date,
+    reading time, tags), and optional hero image.
+  - A narrow, readable body column with tuned typography (larger font size, generous line-height).
+  - Support for headings, blockquotes (styled as pull quotes), lists, and inline images.
+  - Optional inline media/gallery blocks (images or image rows) controlled via section blocks.
+  - Optional related-articles row at the end of the story (2–3 cards).
+- For posts that feature IDs or new releases, the editorial article layout may render a small inline audio
+  player block near the top of the article, using the same styling language as the global label player.
+- Ensure the new editorial layout is wrapped with the COMMA-specific header/hero and footer and stays visually
+  aligned with the homepage.
 
 ### 5.6 Artist Landing Pages
 
@@ -253,6 +308,33 @@ Each of these will be built as independent, optional sections that can be reorde
   - Use `#121212` / `#FDFDFD` as the primary light/dark palette, with accent colours applied sparingly.
   - Ensure artist-first content hierarchy on homepage and detail pages.
 
+### 5.8 Global Label Player (IDs & New Releases)
+
+**Requirements**
+
+- Provide a global, minimal music player for COMMA. IDs and new label releases, inspired by compact
+  bottom-edge players used on reference sites.
+- Implement as a dedicated section (for example, `label-player`) that can be included on the main layout or
+  homepage template so it is available site-wide.
+- The section should expose a list of tracks via blocks, where each block contains:
+  - Title and optional artist label.
+  - File reference to an uploaded MP3 (using Shopify Files, under ~20MB) for IDs / new tracks.
+  - Optional duration label (purely visual).
+  - Optional flags/fields for mixes (e.g., boolean `is_mix` + `soundcloud_url`) so long-form mixes can
+    open externally on SoundCloud instead of streaming from Shopify.
+- The UI should provide:
+  - Collapsed "now playing" bar fixed to the bottom edge or bottom-right on desktop;
+  - Basic controls: play/pause, previous/next track, progress/scrub bar;
+  - Expandable track list showing all configured tracks.
+- Behaviour:
+  - Uses a single HTML5 `<audio>` element with `preload="none"` for performance.
+  - Plays local MP3s for IDs/new releases; for tracks flagged as mixes, the player opens the configured
+    SoundCloud URL in a new tab/window instead of streaming locally.
+  - Continues playback while the user browses within the storefront (as far as Shopify’s templating and
+    page reload model allow; true SPA persistence is not required for v1).
+- Styling and interactions must align with the COMMA brand (dark, minimal, high-contrast) and avoid heavy
+  animation or JS payloads beyond what is necessary for playback.
+
 ## 6. Wireframe Overview (Textual)
 
 This section captures the current textual wireframes for the core page types. It should guide both design
@@ -260,21 +342,14 @@ This section captures the current textual wireframes for the core page types. It
 
 ### 6.1 Desktop Homepage (Top to Bottom)
 
-1. **Global Header / Nav**
-   - Slim, full-width bar on `#121212`.
-   - Left: COMMA. logo.
-   - Right: primary nav links (Artists, Releases, Store, Journal, About, Events) plus search, account (optional),
-     and cart icons.
-   - Sticky on scroll.
-
-2. **Hero “Stage” + Ticker**
-   - Full-viewport hero on `#121212` with centred composition:
-     - Eyebrow label (e.g., “Label / Management / Store”).
-     - Large white wordmark/headline.
-     - 1–2 lines of supporting copy.
-     - Primary CTA (“Explore artists”) and optional secondary CTA (“Listen to latest release”).
-   - Along the bottom edge: full-width ticker bar (accent colour within palette) with horizontally scrolling
-     marquee text (e.g., upcoming event / location / time), adding subtle motion.
+1. **Hero + Navigation Stage (with Ticker)**
+   - A single full-viewport "stage" section on `#121212` that combines:
+     - Minimal navigation affordances (logo and small menu icon in a top overlay row).
+     - Main hero content (eyebrow, large wordmark/headline, 1–2 lines of copy, primary/secondary CTAs).
+     - A full-width ticker bar along the bottom edge with horizontally scrolling marquee text (e.g., upcoming
+       event / location / time).
+   - The section acts as both the visual hero and the entry point to the rest of the site; there is no separate
+     heavy header bar on the homepage.
 
 3. **Featured Artists Carousel**
    - Section heading: “Featured artists” + optional “View all artists” link.
@@ -312,13 +387,12 @@ This section captures the current textual wireframes for the core page types. It
 
 ### 6.2 Mobile Homepage
 
-1. **Header**
-   - Compact bar with logo left and hamburger right.
-   - Hamburger opens full-screen drawer with nav links and social/playlist.
-
-2. **Hero + Ticker**
-   - Full-width hero on `#121212` with centred headline, short copy, and a primary full-width CTA.
-   - Narrow ticker bar below, scrolling marquee text horizontally.
+1. **Hero + Navigation Stage (with Ticker)**
+   - The hero acts as the top of the page, with minimal nav folded into it:
+     - Compact overlay row with logo and small menu icon that opens the full-screen/drawer overlay menu.
+     - Centred headline and short copy.
+     - Primary CTA as a full-width button.
+     - Narrow ticker bar below, scrolling marquee text horizontally.
 
 3. **Featured Artists**
    - Horizontal scroll of tall cards (1.2–1.5 cards visible), each with image, name, short descriptor.
