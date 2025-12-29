@@ -1,0 +1,1349 @@
+{% doc %}
+  @prompt
+    Create a comprehensive enhanced collapsible accordion section with extensive customization options: Main heading with custom typography, size, color, alignment, custom padding above, and horizontal padding controls. Subheading with same typography controls, gap spacing from main heading, and horizontal padding. Content options to add multiple items with custom fonts, sizes, thickness, photos, emojis/icons. Animation settings including hover animations, background color changes, slide distance, opening animations. Icon settings pointing RIGHT away from text by default. Horizontal padding with custom left/right controls. Item spacing and padding controls. Border options with width and wavy line style. Complete accordion item typography controls. Working section top/bottom padding that actually separates from sections above/below. CRITICAL: Add comprehensive padding controls for accordion item content areas (top, bottom, left, right padding) to prevent text cropping and ensure full text displays properly within each accordion item without being cut off or truncated., I want Padding in enhanced accordion to stay within the section and the enhanced accordion section to adhere to its parent section and its section size, And be able to add padding top and bottom of the section to separate it from the sections above and underneath., And be able to add padding top and bottom of the section to separate it from the sections above and underneath, These do not function and do no move any content:
+    Section top padding
+    Section bottom padding, I have no possibiliity to increase padding at the bottom of Enhanced accordion to separate it from the section underneath, this whole section does not work. Section Spacing
+    Section top padding
+    
+    Section bottom padding
+    
+    Extra bottom spacing*, I need to have an option to have a Border style shaped as a wave line. this function does not work per se.
+    
+    I also need to have possibilty to customize how the arrow, chevron or plus minus icon is behaving.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-section-{{ ai_gen_id }} {
+    padding-top: {{ block.settings.section_padding_top }}px;
+    padding-bottom: {{ block.settings.section_padding_bottom }}px;
+    margin-top: {{ block.settings.section_margin_top }}px;
+    margin-bottom: {{ block.settings.section_margin_bottom }}px;
+    background-color: {{ block.settings.section_background_color }};
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ai-accordion-{{ ai_gen_id }} {
+    width: 100%;
+    box-sizing: border-box;}
+
+  .ai-accordion-container-{{ ai_gen_id }} {
+    max-width: 100%;
+    margin: 0 auto;padding-left: {{ block.settings.section_padding_horizontal }}px;
+    padding-right: {{ block.settings.section_padding_horizontal }}px;
+    box-sizing: border-box;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.heading_alignment }};
+    padding-top: {{ block.settings.heading_padding_top }}px;
+    padding-left: {{ block.settings.heading_padding_horizontal }}px;
+    padding-right: {{ block.settings.heading_padding_horizontal }}px;
+    margin-bottom: {{ block.settings.subheading_gap }}px;
+    box-sizing: border-box;
+  }
+
+  .ai-accordion-main-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin:0;
+    line-height: 1.2;
+  }
+
+  .ai-accordion-subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    padding-left: {{ block.settings.subheading_padding_horizontal }}px;
+    padding-right: {{ block.settings.subheading_padding_horizontal }}px;
+    line-height: 1.3;
+    box-sizing: border-box;
+  }
+
+  .ai-accordion-items-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.content_gap }}px;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.item_spacing }}px;
+    {% if block.settings.border_style == 'wavy' %}
+      position: relative;
+      background-color: {{ block.settings.item_background_color }};{% else %}
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+    {% endif %}
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    transition: all {{ block.settings.animation_duration }}s ease;
+    box-sizing: border-box;
+  }
+
+  {% if block.settings.border_style == 'wavy' %}
+    .ai-accordion-item-{{ ai_gen_id }}::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: {{ block.settings.border_radius }}px;
+      padding: {{ block.settings.border_width }}px;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          {{ block.settings.border_color }}0px,
+          {{ block.settings.border_color }} {{ block.settings.border_width }}px,
+          transparent {{ block.settings.border_width }}px,
+          transparent {{ block.settings.border_width | times: 2 }}px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          {{ block.settings.border_color }} 0px,
+          {{ block.settings.border_color }} {{ block.settings.border_width }}px,
+          transparent {{ block.settings.border_width }}px,
+          transparent {{ block.settings.border_width | times: 2 }}px
+        );
+      mask: 
+        radial-gradient(circle at 0% 50%, transparent 40%, black 40.5%),
+        radial-gradient(circle at 100% 50%, transparent 40%, black 40.5%);
+      mask-composite: intersect;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .ai-accordion-item-{{ ai_gen_id }} > * {
+      position: relative;
+      z-index: 2;
+    }
+  {% endif %}
+
+  .ai-accordion-item-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.hover_background_color }};
+    transform: translateY({{ block.settings.hover_slide_distance }}px);
+  }
+
+  .ai-accordion-item-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: {{ block.settings.item_padding_vertical }}px {{ block.settings.item_padding_right }}px {{ block.settings.item_padding_vertical }}px {{ block.settings.item_padding_left }}px;
+    cursor: pointer;
+    background-color: {{ block.settings.item_background_color }};
+    transition: background-color {{ block.settings.animation_duration }}s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .ai-accordion-item-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.item_hover_background_color }};
+  }
+
+  .ai-accordion-item-title-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-grow: 1;min-width: 0;
+  }
+
+  .ai-accordion-item-image-{{ ai_gen_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .ai-accordion-item-image-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ai-accordion-item-image-placeholder-{{ ai_gen_id }} svg {
+    width:60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  .ai-accordion-item-icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.emoji_size }}px;
+    flex-shrink: 0;
+  }
+
+  .ai-accordion-item-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.item_title_font.family }}, {{ block.settings.item_title_font.fallback_families }};
+    font-weight: {{ block.settings.item_title_font.weight }};
+    font-size: {{ block.settings.item_title_size }}px;
+    color: {{ block.settings.item_title_color }};
+    margin: 0;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    transition: transform {{ block.settings.icon_animation_duration }}s {{ block.settings.icon_animation_easing }};
+    color: {{ block.settings.icon_color }};
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  {% if block.settings.icon_type == 'arrow_right' %}
+    .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+      transform: rotate(90deg);
+    }
+  {% elsif block.settings.icon_type == 'arrow_down' %}
+    .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+      transform: rotate(180deg);
+    }
+  {% elsif block.settings.icon_type == 'chevron_right' %}
+    .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+      transform: rotate(90deg);
+    }
+  {% elsif block.settings.icon_type == 'chevron_down' %}
+    .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+      transform: rotate(180deg);
+    }
+  {% elsif block.settings.icon_type == 'plus_minus' %}
+    .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} .ai-accordion-icon-plus-{{ ai_gen_id }} {
+      opacity: 0;
+      transform: rotate(90deg);
+    }.ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} .ai-accordion-icon-minus-{{ ai_gen_id }} {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+  {% endif %}
+
+  .ai-accordion-icon-plus-{{ ai_gen_id }},
+  .ai-accordion-icon-minus-{{ ai_gen_id }} {
+    position: absolute;
+    transition: all {{ block.settings.icon_animation_duration }}s {{ block.settings.icon_animation_easing }};
+  }
+
+  .ai-accordion-icon-minus-{{ ai_gen_id }} {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height {{ block.settings.opening_animation_duration }}s ease;
+    background-color: {{ block.settings.content_background_color }};
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} {
+    padding: {{ block.settings.content_padding_top }}px {{ block.settings.content_padding_right }}px {{ block.settings.content_padding_bottom }}px {{ block.settings.content_padding_left }}px;
+    font-family: {{ block.settings.content_font.family }}, {{ block.settings.content_font.fallback_families }};
+    font-weight: {{ block.settings.content_font.weight }};
+    font-size: {{ block.settings.content_size }}px;
+    color: {{ block.settings.content_color }};
+    line-height: 1.5;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} * {
+    margin-top: 0;
+    margin-bottom: 1em;
+    max-width: 100%;box-sizing: border-box;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} *:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-accordion-content-inner-{{ ai_gen_id }} img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .ai-accordion-extra-bottom-spacing-{{ ai_gen_id }} {
+    height: {{ block.settings.extra_bottom_spacing }}px;width: 100%;}
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-section-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.section_padding_top | times: 0.7 }}px;
+      padding-bottom: {{ block.settings.section_padding_bottom | times: 0.7 }}px;
+      margin-top: {{ block.settings.section_margin_top | times: 0.7 }}px;
+      margin-bottom: {{ block.settings.section_margin_bottom | times: 0.7 }}px;
+    }
+
+    .ai-accordion-container-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.section_padding_horizontal | times: 0.7 }}px;
+      padding-right: {{ block.settings.section_padding_horizontal | times: 0.7 }}px;
+    }
+
+    .ai-accordion-main-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-accordion-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.8 }}px;
+    }
+
+    .ai-accordion-item-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.item_title_size | times: 0.9 }}px;
+    }
+
+    .ai-accordion-content-inner-{{ ai_gen_id }} {
+      font-size: {{ block.settings.content_size | times: 0.9 }}px;
+    }
+
+    .ai-accordion-extra-bottom-spacing-{{ ai_gen_id }} {
+      height: {{ block.settings.extra_bottom_spacing | times: 0.7 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-accordion-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <enhanced-accordion-{{ ai_gen_id }} class="ai-accordion-{{ ai_gen_id }}">
+    <div class="ai-accordion-container-{{ ai_gen_id }}">
+      {% if block.settings.main_heading != blank or block.settings.subheading != blank %}
+        <div class="ai-accordion-header-{{ ai_gen_id }}">
+          {% if block.settings.main_heading != blank %}
+            <h2 class="ai-accordion-main-heading-{{ ai_gen_id }}">
+              {{ block.settings.main_heading }}
+            </h2>
+          {% endif %}
+          {% if block.settings.subheading != blank %}
+            <div class="ai-accordion-subheading-{{ ai_gen_id }}">
+              {{ block.settings.subheading }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}<div class="ai-accordion-items-{{ ai_gen_id }}">
+        {% for i in (1..10) %}
+          {% assign title_key = 'item_' | append: i | append: '_title' %}
+          {% assign content_key = 'item_' | append: i | append: '_content' %}
+          {% assign image_key = 'item_' | append: i | append: '_image' %}
+          {% assign icon_key = 'item_' | append: i | append: '_icon' %}
+          {% assign enabled_key = 'item_' | append: i | append: '_enabled' %}
+
+          {% assign item_title = block.settings[title_key] %}
+          {% assign item_content = block.settings[content_key] %}
+          {% assign item_image = block.settings[image_key] %}
+          {% assign item_icon = block.settings[icon_key] %}
+          {% assign item_enabled = block.settings[enabled_key] %}
+
+          {% if item_enabled and item_title != blank %}
+            <div class="ai-accordion-item-{{ ai_gen_id }}" data-accordion-item="{{ i }}">
+              <button
+                class="ai-accordion-item-header-{{ ai_gen_id }}"
+                aria-expanded="false"
+                aria-controls="ai-accordion-content-{{ ai_gen_id }}-{{ i }}">
+                <div class="ai-accordion-item-title-wrapper-{{ ai_gen_id }}">
+                  {% if item_image != blank %}
+                    <img
+                      src="{{ item_image | image_url: width: 100}}"
+                      alt="{{ item_image.alt | escape }}"
+                      class="ai-accordion-item-image-{{ ai_gen_id }}"
+                loading="lazy"
+                      width="100"
+                      height="100">
+                  {% elsif item_icon != blank %}
+                    <span class="ai-accordion-item-icon-{{ ai_gen_id }}">{{ item_icon }}</span>
+                  {% elsif block.settings.show_placeholder_images %}
+                    <div class="ai-accordion-item-image-placeholder-{{ ai_gen_id }}">
+                      {{'image' | placeholder_svg_tag }}
+                    </div>
+                  {% endif %}
+
+                  <h3 class="ai-accordion-item-title-{{ ai_gen_id }}">{{ item_title }}</h3>
+                </div>
+
+                <div class="ai-accordion-icon-{{ ai_gen_id }}">
+                  {% if block.settings.icon_type == 'arrow_right' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+                  {% elsif block.settings.icon_type == 'arrow_down' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                  {% elsif block.settings.icon_type == 'chevron_right' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  {% elsif block.settings.icon_type == 'chevron_down' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  {% elsif block.settings.icon_type == 'plus_minus' %}
+                    <svg class="ai-accordion-icon-plus-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                <svg class="ai-accordion-icon-minus-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ block.settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                  {% endif %}
+                </div>
+              </button>
+
+              <div 
+                class="ai-accordion-content-{{ ai_gen_id }}"
+                id="ai-accordion-content-{{ ai_gen_id }}-{{ i }}"
+              >
+                <div class="ai-accordion-content-inner-{{ ai_gen_id }}">
+                  {{ item_content }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </enhanced-accordion-{{ ai_gen_id }}>{% if block.settings.extra_bottom_spacing > 0 %}
+    <div class="ai-accordion-extra-bottom-spacing-{{ ai_gen_id }}"></div>
+  {% endif %}
+</div><script>
+  (function() {
+    class EnhancedAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.accordionItems = this.querySelectorAll('.ai-accordion-item-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.accordionItems.forEach((item) => {
+          const header = item.querySelector('.ai-accordion-item-header-{{ ai_gen_id }}');
+          const content = item.querySelector('.ai-accordion-content-{{ ai_gen_id }}');
+          header.addEventListener('click', () => {
+            this.toggleItem(item, header, content);
+          });
+        });
+      }
+
+      toggleItem(item, header, content) {
+        const isActive = item.classList.contains('active');
+        if (isActive) {
+          this.closeItem(item, header, content);
+        } else {
+          {% if block.settings.allow_multiple_open == false %}
+            this.accordionItems.forEach((otherItem) => {
+              if (otherItem !== item && otherItem.classList.contains('active')) {
+                const otherHeader = otherItem.querySelector('.ai-accordion-item-header-{{ ai_gen_id }}');
+                const otherContent = otherItem.querySelector('.ai-accordion-content-{{ ai_gen_id }}');
+                this.closeItem(otherItem, otherHeader, otherContent);
+              }
+            });
+          {% endif %}
+          
+          this.openItem(item, header, content);
+        }
+      }
+
+      openItem(item, header, content) {
+        item.classList.add('active');
+        header.setAttribute('aria-expanded', 'true');
+        
+        const contentInner = content.querySelector('.ai-accordion-content-inner-{{ ai_gen_id }}');
+        const contentHeight = contentInner.scrollHeight;
+        content.style.maxHeight = contentHeight + 'px';
+      }
+
+      closeItem(item, header, content) {
+        item.classList.remove('active');
+        header.setAttribute('aria-expanded', 'false');
+        content.style.maxHeight = '0px';
+      }
+    }
+
+    customElements.define('enhanced-accordion-{{ ai_gen_id }}', EnhancedAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Enhanced Accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Section top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Section bottom padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Section top margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Section bottom margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Section horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "extra_bottom_spacing",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Extra bottom spacing",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "label": "Section background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Main Heading"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Find answers to common questions about our products and services.</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Subheading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subheading_gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap from main heading",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "subheading_padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Subheading horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap to content",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Accordion Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple_open",
+      "label": "Allow multiple items open",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Hover animation duration",
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "opening_animation_duration",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Opening animation duration",
+      "default": 0.4
+    },
+    {
+      "type": "range",
+      "id": "hover_slide_distance",
+      "min": -10,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Hover slide distance",
+      "default": -2
+    },
+    {
+      "type": "color",
+      "id": "hover_background_color",
+      "label": "Item hover background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "header",
+      "content": "Icon Settings"
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "label": "Icon type",
+      "options": [
+        {"value": "arrow_right", "label": "Arrow Right"},
+        {"value": "arrow_down", "label": "Arrow Down"},
+        {"value": "chevron_right", "label": "Chevron Right"},
+        {"value": "chevron_down", "label": "Chevron Down"},
+        {"value": "plus_minus", "label": "Plus/Minus"}
+      ],
+      "default": "arrow_right"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Icon stroke width",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "icon_animation_duration",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Icon animation duration",
+      "default": 0.3
+    },
+    {
+      "type": "select",
+      "id": "icon_animation_easing",
+      "label": "Icon animation easing",
+      "options": [
+        {"value": "ease", "label": "Ease"},
+        {"value": "ease-in", "label": "Ease In"},
+        {"value": "ease-out", "label": "Ease Out"},
+        {"value": "ease-in-out", "label": "Ease In Out"},
+        {"value": "linear", "label": "Linear"}
+      ],
+      "default": "ease"
+    },
+    {
+      "type": "header",
+      "content": "Item Styling"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between items",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "item_padding_vertical",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Item vertical padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_padding_left",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Item left padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_padding_right",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Item right padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_hover_background_color",
+      "label": "Item header hover color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "header",
+      "content": "Border Settings"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border style",
+      "options": [
+        {"value": "solid", "label": "Solid"},
+        {"value": "dashed", "label": "Dashed"},
+        {"value": "dotted", "label": "Dotted"},
+        {"value": "wavy", "label": "Wavy"}
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Item Title Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "item_title_font",
+      "label": "Item title font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "item_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Item title size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "item_title_color",
+      "label": "Item title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Content Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_font",
+      "label": "Content font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "content_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Content text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "content_background_color",
+      "label": "Content background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content Padding Controls"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Content top padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Content bottom padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "content_padding_left",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Content left padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "content_padding_right",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Content right padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Images & Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder_images",
+      "label": "Show placeholder images",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Image size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "emoji_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Emoji/icon size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item1"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_enabled",
+      "label": "Enable item 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Item 1 title",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_content",
+      "label": "Item 1 content",
+      "default": "<p>We offer a 30-day return policy for all unused items in their original packaging. Please contact our customer service team to initiate a return.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_image",
+      "label": "Item 1 image"
+    },
+    {
+      "type": "text",
+      "id": "item_1_icon",
+      "label": "Item 1 emoji/icon",
+      "default": "📦"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_enabled",
+      "label": "Enable item 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Item 2 title",
+      "default": "How long does shipping take?"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_content",
+      "label": "Item 2 content",
+      "default": "<p>Standard shipping typically takes 3-5 business days. Express shipping options are available for faster delivery within 1-2 business days.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_image",
+      "label": "Item 2 image"
+    },
+    {
+      "type": "text",
+      "id": "item_2_icon",
+      "label": "Item 2 emoji/icon",
+      "default": "🚚"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_enabled",
+      "label": "Enable item 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Item 3 title",
+      "default": "Do you offer international shipping?"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_content",
+      "label": "Item 3 content",
+      "default": "<p>Yes, we ship to most countries worldwide. International shipping costs and delivery times vary by destination. Please check our shipping calculator at checkout.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_image",
+      "label": "Item 3 image"
+    },
+    {
+      "type": "text",
+      "id": "item_3_icon",
+      "label": "Item 3 emoji/icon",
+      "default": "🌍"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_enabled",
+      "label": "Enable item 4",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Item 4 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_content",
+      "label": "Item 4 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_4_image",
+      "label": "Item 4 image"
+    },
+    {
+      "type": "text",
+      "id": "item_4_icon",
+      "label": "Item 4 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_5_enabled",
+      "label": "Enable item 5",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "Item 5 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_content",
+      "label": "Item 5 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_5_image",
+      "label": "Item 5 image"
+    },
+    {
+      "type": "text",
+      "id": "item_5_icon",
+      "label": "Item 5 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_6_enabled",
+      "label": "Enable item 6",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_6_title",
+      "label": "Item 6 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_6_content",
+      "label": "Item 6 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_6_image",
+      "label": "Item 6 image"
+    },
+    {
+      "type": "text",
+      "id": "item_6_icon",
+      "label": "Item 6 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_7_enabled",
+      "label": "Enable item 7",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_7_title",
+      "label": "Item 7 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_7_content",
+      "label": "Item 7 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_7_image",
+      "label": "Item 7 image"
+    },
+    {
+      "type": "text",
+      "id": "item_7_icon",
+      "label": "Item 7 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_8_enabled",
+      "label": "Enable item 8",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_8_title",
+      "label": "Item 8 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_8_content",
+      "label": "Item 8 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_8_image",
+      "label": "Item 8 image"
+    },
+    {
+      "type": "text",
+      "id": "item_8_icon",
+      "label": "Item 8 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 9"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_9_enabled",
+      "label": "Enable item 9",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_9_title",
+      "label": "Item 9 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_9_content",
+      "label": "Item 9 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_9_image",
+      "label": "Item 9 image"
+    },
+    {
+      "type": "text",
+      "id": "item_9_icon",
+      "label": "Item 9 emoji/icon"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Item 10"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_10_enabled",
+      "label": "Enable item 10",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_10_title",
+      "label": "Item 10 title"
+    },
+    {
+      "type": "richtext",
+      "id": "item_10_content",
+      "label": "Item 10 content"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_10_image",
+      "label": "Item 10 image"
+    },
+    {
+      "type": "text",
+      "id": "item_10_icon",
+      "label": "Item 10 emoji/icon"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Enhanced Accordion"
+    }
+  ]
+}
+{% endschema %}
