@@ -9,6 +9,23 @@
  */
 {
   "sections": {
+    "comma_hero": {
+      "type": "comma-hero-with-nav",
+      "settings": {
+        "media_type": "image",
+        "overlay_opacity": 70,
+        "full_height": true,
+        "menu": "main-menu",
+        "eyebrow": "Label",
+        "heading": "Artist-first listening for a new era",
+        "subheading": "Use this area to introduce your label, roster, or latest release in a single, concise block of copy.",
+        "show_content_buttons": true,
+        "content_button_label_1": "Browse artists",
+        "content_button_style_1": "primary",
+        "content_button_label_2": "View catalogue",
+        "content_button_style_2": "secondary"
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -222,6 +239,7 @@
     }
   },
   "order": [
+    "comma_hero",
     "image_banner",
     "rich_text",
     "featured_collection",
