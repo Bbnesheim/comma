@@ -129,17 +129,9 @@
       "type": "custom-liquid",
       "name": "t:sections.custom-liquid.presets.name",
       "settings": {
-        "heading": "Your Heading Here",
-        "description": "<b>I Båttilsynet.no brenner vi for trygghet og kvalitet på sjøen. Vi er et team med solid maritim bakgrunn – både gjennom utdanning og mange års praksis. Våre ansatte har tjenestegjort om bord i Marinens fartøy og har erfaring fra ulike typer fiskefartøy, noe som gir oss en unik forståelse av hva som kreves for å holde en båt i god stand – under alle forhold. I tillegg har vi lang erfaring med småbåter, både privat og profesjonelt. \n\nEnten det gjelder daglig vedlikehold, tilsyn i opplagsperioden eller forebygging av skader, vet vi hva som skal til for at båten din skal være klar når du trenger den.</b>",
-        "button_label": "",
-        "button_link": "",
-        "text_position": "after",
         "color_scheme": "scheme-1",
         "padding_top": 16,
-        "padding_bottom": 16,
-        "padding_left": 20,
-        "padding_right": 20,
-        "text_top_padding": 0
+        "padding_bottom": 16
       }
     },
     "image_banner_pq3caw": {
