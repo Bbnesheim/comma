@@ -1,8 +1,15 @@
 {{ 'section-comma-hero-with-nav.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign has_video = section.settings.media_type == 'video' and section.settings.video != blank
-  assign has_image = section.settings.media_type == 'image' and section.settings.image != blank
+  assign has_video = false
+  if section.settings.media_type == 'video' and section.settings.video != blank
+    assign has_video = true
+  endif
+
+  assign has_image = false
+  if section.settings.media_type == 'image' and section.settings.image != blank
+    assign has_image = true
+  endif
 -%}
 
 <section
