@@ -1,0 +1,387 @@
+{{ 'section-comma-hero-with-nav.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign has_video = section.settings.media_type == 'video' and section.settings.video != blank
+  assign has_image = section.settings.media_type == 'image' and section.settings.image != blank
+-%}
+
+<section
+  class="comma-hero{% if section.settings.full_height %} comma-hero--full-height{% endif %} section-{{ section.id }}-padding"
+  data-comma-hero
+>
+  <div class="comma-hero__media" aria-hidden="true">
+    {%- if has_video -%}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '1100x',
+          autoplay: true,
+          loop: true,
+          controls: false,
+          muted: true,
+          playsinline: true
+      }}
+    {%- elsif has_image -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          widths: '750, 1100, 1500, 2000, 3000, 3840',
+          sizes: '100vw',
+          loading: 'lazy'
+      }}
+    {%- else -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+  <div class="comma-hero__overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+
+  <div class="comma-hero__inner page-width">
+    <div class="comma-hero__nav-bar">
+      <div class="comma-hero__branding">
+        <a href="{{ routes.root_url }}" class="comma-hero__logo" aria-label="{{ shop.name | escape }}">
+          {%- if settings.logo != blank -%}
+            {{
+              settings.logo
+              | image_url: width: 300
+              | image_tag:
+                widths: '120, 180, 240, 300',
+                sizes: '(min-width: 990px) 180px, 140px',
+                loading: 'lazy'
+            }}
+          {%- else -%}
+            <span class="comma-hero__site-name">{{ shop.name }}</span>
+          {%- endif -%}
+        </a>
+      </div>
+
+      <div class="comma-hero__nav" data-comma-hero-nav>
+        {%- if section.settings.menu != blank -%}
+          <nav class="comma-hero__menu" aria-label="{{ 'sections.header.main_menu' | t }}">
+            {%- for link in section.settings.menu.links -%}
+              <a href="{{ link.url }}" class="comma-hero__menu-link">{{ link.title }}</a>
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+
+        {%- if section.settings.primary_cta_label != blank -%}
+          <a
+            {% if section.settings.primary_cta_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section.settings.primary_cta_link }}"
+            {% endif %}
+            class="button button--primary comma-hero__cta"
+          >
+            {{ section.settings.primary_cta_label | escape }}
+          </a>
+        {%- endif -%}
+
+        <button
+          type="button"
+          class="comma-hero__menu-toggle"
+          aria-label="{{ 'accessibility.menu_open' | t | default: 'Open menu' }}"
+          aria-expanded="false"
+          aria-controls="CommaHeroNavOverlay-{{ section.id }}"
+          data-comma-hero-toggle
+        >
+          <span class="comma-hero__menu-toggle-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+
+        <div
+          id="CommaHeroNavOverlay-{{ section.id }}"
+          class="comma-hero__nav-overlay"
+          aria-hidden="true"
+          data-comma-hero-overlay
+        >
+          <div class="comma-hero__nav-overlay-inner">
+            {%- if section.settings.menu != blank -%}
+              <ul class="comma-hero__nav-overlay-menu" role="list">
+                {%- for link in section.settings.menu.links -%}
+                  <li class="comma-hero__nav-overlay-item">
+                    <a href="{{ link.url }}" class="comma-hero__nav-overlay-link">
+                      <span class="comma-hero__nav-overlay-link-index">{{ forloop.index | prepend: '0' }}</span>
+                      <span class="comma-hero__nav-overlay-link-label">{{ link.title }}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            {%- if section.settings.primary_cta_label != blank -%}
+              <a
+                {% if section.settings.primary_cta_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.primary_cta_link }}"
+                {% endif %}
+                class="button button--primary comma-hero__nav-overlay-cta"
+              >
+                {{ section.settings.primary_cta_label | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comma-hero__content">
+      <div class="comma-hero__content-inner">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="comma-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h1 class="comma-hero__heading">{{ section.settings.heading }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <p class="comma-hero__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.show_content_buttons -%}
+          <div class="comma-hero__buttons">
+            {%- if section.settings.content_button_label_1 != blank -%}
+              <a
+                {% if section.settings.content_button_link_1 == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.content_button_link_1 }}"
+                {% endif %}
+                class="button{% if section.settings.content_button_style_1 == 'secondary' %} button--secondary{% else %} button--primary{% endif %}"
+              >
+                {{ section.settings.content_button_label_1 | escape }}
+              </a>
+            {%- endif -%}
+
+            {%- if section.settings.content_button_label_2 != blank -%}
+              <a
+                {% if section.settings.content_button_link_2 == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.content_button_link_2 }}"
+                {% endif %}
+                class="button{% if section.settings.content_button_style_2 == 'secondary' %} button--secondary{% else %} button--primary{% endif %}"
+              >
+                {{ section.settings.content_button_label_2 | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+  function initCommaHeroNav(section) {
+    const nav = section.querySelector('[data-comma-hero-nav]');
+    const toggle = nav && nav.querySelector('[data-comma-hero-toggle]');
+    const overlay = nav && nav.querySelector('[data-comma-hero-overlay]');
+
+    if (!nav || !toggle || !overlay) return;
+
+    const html = document.documentElement;
+
+    function openNav() {
+      if (nav.classList.contains('comma-hero__nav--open')) return;
+      nav.classList.add('comma-hero__nav--open');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', toggle.dataset.labelClose || 'Close menu');
+      overlay.setAttribute('aria-hidden', 'false');
+      html.classList.add('comma-hero-nav-open');
+    }
+
+    function closeNav() {
+      if (!nav.classList.contains('comma-hero__nav--open')) return;
+      nav.classList.remove('comma-hero__nav--open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', toggle.dataset.labelOpen || 'Open menu');
+      overlay.setAttribute('aria-hidden', 'true');
+      html.classList.remove('comma-hero-nav-open');
+    }
+
+    toggle.addEventListener('click', () => {
+      if (nav.classList.contains('comma-hero__nav--open')) {
+        closeNav();
+      } else {
+        openNav();
+      }
+    });
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) {
+        closeNav();
+      }
+    });
+
+    section.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        closeNav();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-comma-hero]').forEach((section) => {
+      initCommaHeroNav(section);
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Comma hero with navigation",
+  "tag": "section",
+  "class": "section section--full-width",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero media"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "default": "image",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Background video"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "default": 70,
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_height",
+      "label": "Fill viewport height",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_label",
+      "label": "Primary navigation CTA label",
+      "default": "Sign in"
+    },
+    {
+      "type": "url",
+      "id": "primary_cta_link",
+      "label": "Primary navigation CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Hero content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Artist-first listening for a new era"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Use this area to introduce your label, roster, or latest release in a single, concise block of copy."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content_buttons",
+      "label": "Show hero buttons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "content_button_label_1",
+      "label": "Primary button label",
+      "default": "Browse artists"
+    },
+    {
+      "type": "url",
+      "id": "content_button_link_1",
+      "label": "Primary button link"
+    },
+    {
+      "type": "select",
+      "id": "content_button_style_1",
+      "label": "Primary button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "content_button_label_2",
+      "label": "Secondary button label",
+      "default": "View catalogue"
+    },
+    {
+      "type": "url",
+      "id": "content_button_link_2",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "select",
+      "id": "content_button_style_2",
+      "label": "Secondary button style",
+      "default": "secondary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comma hero with nav",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
