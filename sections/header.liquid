@@ -24,6 +24,10 @@
     }
   {%- endif -%}
 
+  .header__heading-link {
+    margin-top: 0.5rem;
+  }
+
   {%- if section.settings.menu_type_desktop != "drawer" -%}
     @media screen and (min-width: 990px) {
       header-drawer {
@@ -146,14 +150,16 @@
             {%- if settings.logo != blank -%}
               <div class="header__heading-logo-wrapper">
                 {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
-                {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
-                {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
-                {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+                {%- assign logo_scale = 1.35 -%}
+                {%- assign logo_width_scaled = settings.logo_width | times: logo_scale | round -%}
+                {%- assign logo_height = logo_width_scaled | divided_by: settings.logo.aspect_ratio -%}
+                {% capture sizes %}(max-width: {{ logo_width_scaled | times: 2 }}px) 50vw, {{ logo_width_scaled }}px{% endcapture %}
+                {% capture widths %}{{ logo_width_scaled }}, {{ logo_width_scaled | times: 1.5 | round }}, {{ logo_width_scaled | times: 2 }}{% endcapture %}
                 {{ settings.logo | image_url: width: 600 | image_tag:
                   class: 'header__heading-logo motion-reduce',
                   widths: widths,
                   height: logo_height,
-                  width: settings.logo_width,
+                  width: logo_width_scaled,
                   alt: logo_alt,
                   sizes: sizes,
                   preload: true
@@ -186,14 +192,16 @@
             {%- if settings.logo != blank -%}
               <div class="header__heading-logo-wrapper">
                 {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
-                {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
-                {% capture sizes %}(min-width: 750px) {{ settings.logo_width }}px, 50vw{% endcapture %}
-                {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+                {%- assign logo_scale = 1.35 -%}
+                {%- assign logo_width_scaled = settings.logo_width | times: logo_scale | round -%}
+                {%- assign logo_height = logo_width_scaled | divided_by: settings.logo.aspect_ratio -%}
+                {% capture sizes %}(min-width: 750px) {{ logo_width_scaled }}px, 50vw{% endcapture %}
+                {% capture widths %}{{ logo_width_scaled }}, {{ logo_width_scaled | times: 1.5 | round }}, {{ logo_width_scaled | times: 2 }}{% endcapture %}
                 {{ settings.logo | image_url: width: 600 | image_tag:
                   class: 'header__heading-logo',
                   widths: widths,
                   height: logo_height,
-                  width: settings.logo_width,
+                  width: logo_width_scaled,
                   alt: logo_alt,
                   sizes: sizes,
                   preload: true

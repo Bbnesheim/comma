@@ -35,7 +35,8 @@
         | image_tag:
           widths: '750, 1100, 1500, 2000, 3000, 3840',
           sizes: '100vw',
-          loading: 'lazy'
+          loading: 'lazy',
+          crossorigin: 'anonymous'
       }}
     {%- else -%}
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -255,6 +256,7 @@
     if (!track) return;
 
     const slides = Array.from(track.children);
+
     if (slides.length <= 3) {
       // Static layout is fine when 3 or fewer artists.
       return;
@@ -343,11 +345,90 @@
     container.__commaHeroArtists = { goNext, goPrev, stopAutoplay, startAutoplay };
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function initCommaHeroHeadingContrast(section) {
+    const image = section.querySelector('.comma-hero__media img');
+    const heading = section.querySelector('.comma-hero__heading');
+
+    if (!image || !heading) return;
+
+    function applyContrast() {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const SAMPLE_SIZE = 200;
+        canvas.width = SAMPLE_SIZE;
+        canvas.height = SAMPLE_SIZE;
+        ctx.drawImage(image, 0, 0, SAMPLE_SIZE, SAMPLE_SIZE);
+
+        const heroRect = image.getBoundingClientRect();
+        const headingRect = heading.getBoundingClientRect();
+        if (!heroRect.width || !heroRect.height) return;
+
+        const centerX = headingRect.left + headingRect.width / 2;
+        const centerY = headingRect.top + headingRect.height / 2;
+
+        let relX = (centerX - heroRect.left) / heroRect.width;
+        let relY = (centerY - heroRect.top) / heroRect.height;
+
+        relX = Math.min(0.95, Math.max(0.05, relX));
+        relY = Math.min(0.95, Math.max(0.05, relY));
+
+        const SAMPLE_W = 40;
+        const SAMPLE_H = 24;
+        const sampleX = Math.max(0, Math.floor(relX * SAMPLE_SIZE - SAMPLE_W / 2));
+        const sampleY = Math.max(0, Math.floor(relY * SAMPLE_SIZE - SAMPLE_H / 2));
+        const width = Math.min(SAMPLE_W, SAMPLE_SIZE - sampleX);
+        const height = Math.min(SAMPLE_H, SAMPLE_SIZE - sampleY);
+
+        const data = ctx.getImageData(sampleX, sampleY, width, height).data;
+
+        let totalLuma = 0;
+        const pixelCount = data.length / 4 || 1;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          totalLuma += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+        const avgLuma = totalLuma / pixelCount;
+
+        const color = avgLuma < 140 ? '#fdfdfd' : '#121212';
+        section.style.setProperty('--comma-hero-heading-color', color);
+      } catch (e) {
+        // Fail silently (e.g. if canvas is tainted by CORS)
+      }
+    }
+
+    if (image.complete && image.naturalWidth) {
+      applyContrast();
+    } else {
+      image.addEventListener('load', applyContrast, { once: true });
+    }
+  }
+
+  function initCommaHeroSection(section) {
+    initCommaHeroNav(section);
+    initCommaHeroArtists(section);
+    initCommaHeroHeadingContrast(section);
+  }
+
+  function initAllCommaHeroSections() {
     document.querySelectorAll('[data-comma-hero]').forEach((section) => {
-      initCommaHeroNav(section);
-      initCommaHeroArtists(section);
+      initCommaHeroSection(section);
     });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllCommaHeroSections);
+  } else {
+    initAllCommaHeroSections();
+  }
+
+  document.addEventListener('shopify:section:load', (event) => {
+    const section = event.target.querySelector('[data-comma-hero]');
+    if (section) initCommaHeroSection(section);
   });
 {% endjavascript %}
 

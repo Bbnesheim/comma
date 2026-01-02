@@ -1,6 +1,8 @@
 :root {
   --comma-hero-bg: #121212;
   --comma-hero-fg: #fdfdfd;
+  /* Approximate announcement bar height so hero fits within initial viewport */
+  --comma-hero-announcement-offset: 3.8rem;
 }
 
 .comma-hero {
@@ -11,7 +13,7 @@
 }
 
 .comma-hero--full-height {
-  min-height: 100vh;
+  min-height: calc(var(--viewport-height, 100vh) - var(--comma-hero-announcement-offset));
 }
 
 .comma-hero__media {
@@ -220,6 +222,7 @@
   font-size: clamp(2.25rem, 4vw, 3.5rem);
   line-height: 1.05;
   margin-bottom: 1rem;
+  color: var(--comma-hero-heading-color, #fdfdfd);
 }
 
 .comma-hero__subheading {
@@ -227,6 +230,7 @@
   font-size: 0.9375rem;
   line-height: 1.6;
   opacity: 0.85;
+  color: var(--comma-hero-heading-color, #fdfdfd);
 }
 
 .comma-hero__buttons {
@@ -254,7 +258,8 @@
 
 .comma-hero__artist-ctas--bottom {
   left: 50%;
-  bottom: clamp(1.5rem, 5vw, 3rem);
+  /* Lift carousel up so it clears the cookie banner at the bottom */
+  bottom: clamp(6rem, 10vh, 10rem);
   transform: translateX(-50%);
 }
 
@@ -284,6 +289,20 @@
 
 .comma-hero__artist-viewport {
   overflow: hidden;
+}
+
+/* Drawer-like hover reveal for artist tiles */
+.comma-hero__artist-cta {
+  border-radius: 0;
+  transform-origin: center bottom;
+  /* closed drawer: sit lower so only the top band is visible */
+  transform: translateY(60%);
+  transition: transform 450ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.comma-hero__artist-cta:hover,
+.comma-hero__artist-cta:focus-visible {
+  transform: translateY(0);
 }
 
 .comma-hero__artist-carousel {
