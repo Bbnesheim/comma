@@ -62,21 +62,24 @@
           "type": "artist_cta",
           "settings": {
             "label": "DECO 5000",
-            "link": ""
+            "link": "",
+            "image": "shopify://shop_images/MarensiusForThisMoment.png"
           }
         },
         "artist_cta_qzQHzr": {
           "type": "artist_cta",
           "settings": {
             "label": "HERMEN",
-            "link": ""
+            "link": "",
+            "image": "shopify://shop_images/HovlandMarensius1_1_-_BW.png"
           }
         },
         "artist_cta_pKXBd4": {
           "type": "artist_cta",
           "settings": {
             "label": "Violand",
-            "link": ""
+            "link": "",
+            "image": "shopify://shop_images/VIOLAND1_435dfbc1-5f2f-475e-a5ff-375cda067a2f.jpg"
           }
         }
       },
