@@ -1,0 +1,41 @@
+{%- liquid
+  assign has_link = false
+  if block.settings.link != blank
+    assign has_link = true
+  endif
+
+  assign label = block.settings.label | default: block.settings.title
+-%}
+
+<li class="comma-hero__artist-slide" {{ block.shopify_attributes }}>
+  <a
+    {% unless has_link %}
+      role="link" aria-disabled="true"
+    {% else %}
+      href="{{ block.settings.link }}"
+    {% endunless %}
+    class="comma-hero__artist-cta"
+  >
+    {%- if block.settings.image != blank -%}
+      <div class="comma-hero__artist-cta-media" aria-hidden="true">
+        {{
+          block.settings.image
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            sizes: '33vw',
+            widths: '400, 600, 900'
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="comma-hero__artist-cta-inner">
+      <span class="comma-hero__artist-cta-index">
+        {{ index | prepend: '0' }}
+      </span>
+      <span class="comma-hero__artist-cta-label">
+        {{ label | escape }}
+      </span>
+    </div>
+  </a>
+</li>

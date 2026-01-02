@@ -186,7 +186,8 @@
 .comma-hero__content {
   flex: 1 1 auto;
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
+  justify-content: center;
   padding: 3rem 1.5rem 2.5rem;
 }
 
@@ -197,7 +198,14 @@
 }
 
 .comma-hero__content-inner {
-  max-width: 32rem;
+  position: relative;
+  max-width: 40rem;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .comma-hero__eyebrow {
@@ -230,6 +238,140 @@
 
 .comma-hero__buttons .button {
   min-width: 8rem;
+}
+
+.comma-hero__artist-ctas {
+  position: absolute;
+  width: 100%;
+  max-width: 60rem;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+
+.comma-hero__artist-ctas * {
+  pointer-events: auto;
+}
+
+.comma-hero__artist-ctas--bottom {
+  left: 50%;
+  bottom: clamp(1.5rem, 5vw, 3rem);
+  transform: translateX(-50%);
+}
+
+.comma-hero__artist-ctas--top {
+  left: 50%;
+  top: clamp(1.5rem, 5vw, 3rem);
+  transform: translateX(-50%);
+}
+
+.comma-hero__artist-ctas--center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.comma-hero__artist-ctas--left {
+  left: clamp(1.5rem, 5vw, 3rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.comma-hero__artist-ctas--right {
+  right: clamp(1.5rem, 5vw, 3rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.comma-hero__artist-viewport {
+  overflow: hidden;
+}
+
+.comma-hero__artist-carousel {
+  display: flex;
+  gap: 0.9rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  will-change: transform;
+  transition: transform 400ms ease;
+}
+
+.comma-hero__artist-slide {
+  flex: 0 0 70%;
+  max-width: 70%;
+}
+
+@media screen and (min-width: 990px) {
+  .comma-hero__artist-slide {
+    flex-basis: 32%;
+    max-width: 32%;
+  }
+}
+
+.comma-hero__artist-cta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.9rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(253, 253, 253, 0.2);
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.comma-hero__artist-cta-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.comma-hero__artist-cta-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+  opacity: 0.85;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.comma-hero__artist-cta-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.comma-hero__artist-cta:hover .comma-hero__artist-cta-media img,
+.comma-hero__artist-cta:focus-visible .comma-hero__artist-cta-media img {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+.comma-hero__artist-cta:hover,
+.comma-hero__artist-cta:focus-visible {
+  border-color: rgba(253, 253, 253, 0.5);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.comma-hero__artist-cta-index {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.comma-hero__artist-cta-label {
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .comma-hero__nav-overlay {
