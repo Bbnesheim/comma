@@ -37,6 +37,7 @@
     },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -53,10 +54,63 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "comma_hero_with_nav_3rJcTf": {
+      "type": "comma-hero-with-nav",
+      "blocks": {
+        "artist_cta_FMp7mX": {
+          "type": "artist_cta",
+          "settings": {
+            "label": "DECO 5000",
+            "link": ""
+          }
+        },
+        "artist_cta_qzQHzr": {
+          "type": "artist_cta",
+          "settings": {
+            "label": "HERMEN",
+            "link": ""
+          }
+        },
+        "artist_cta_pKXBd4": {
+          "type": "artist_cta",
+          "settings": {
+            "label": "Violand",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "artist_cta_FMp7mX",
+        "artist_cta_qzQHzr",
+        "artist_cta_pKXBd4"
+      ],
+      "name": "Comma hero + nav",
+      "settings": {
+        "media_type": "image",
+        "image": "shopify://shop_images/DY3_c28a176d-7745-43a9-a018-b6121c08ed84.png",
+        "overlay_opacity": 70,
+        "full_height": true,
+        "menu": "",
+        "primary_cta_label": "Sign in",
+        "primary_cta_link": "",
+        "eyebrow": "Label",
+        "heading": "Artist-first listening for a new era",
+        "subheading": "Use this area to introduce your label, roster, or latest release in a single, concise block of copy.",
+        "show_content_buttons": true,
+        "carousel_placement": "bottom",
+        "content_button_label_1": "Browse artists",
+        "content_button_link_1": "",
+        "content_button_style_1": "primary",
+        "content_button_label_2": "View catalogue",
+        "content_button_link_2": "",
+        "content_button_style_2": "secondary"
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "comma_hero_with_nav_3rJcTf"
   ]
 }
