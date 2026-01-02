@@ -102,10 +102,10 @@
         "subheading": "Use this area to introduce your label, roster, or latest release in a single, concise block of copy.",
         "show_content_buttons": true,
         "carousel_placement": "bottom",
-        "content_button_label_1": "Browse artists",
+        "content_button_label_1": "",
         "content_button_link_1": "",
         "content_button_style_1": "primary",
-        "content_button_label_2": "View catalogue",
+        "content_button_label_2": "",
         "content_button_link_2": "",
         "content_button_style_2": "secondary"
       }
