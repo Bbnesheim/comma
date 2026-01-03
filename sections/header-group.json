@@ -91,7 +91,7 @@
       "name": "Comma hero + nav",
       "settings": {
         "media_type": "image",
-        "image": "shopify://shop_images/DY3_c28a176d-7745-43a9-a018-b6121c08ed84.png",
+        "video": "shopify://files/videos/HERMENHERO1.mp4",
         "overlay_opacity": 70,
         "full_height": true,
         "menu": "new-hero",
